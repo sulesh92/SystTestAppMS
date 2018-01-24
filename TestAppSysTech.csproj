@@ -102,6 +102,11 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20180124171426_MigrationInit.cs" />
+    <Compile Include="Migrations\20180124171426_MigrationInit.designer.cs">
+      <DependentUpon>20180124171426_MigrationInit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\DataModelContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
