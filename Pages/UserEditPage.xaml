@@ -10,5 +10,20 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <TextBlock Text="Управление персоналом  " Foreground="#0091d0" Margin="20" Style="{ThemeResource HeaderTextBlockStyle}"/>
+
+        <ListView x:Name="personsList" Grid.Row="1" Margin="10">
+            <ListView.ItemTemplate>
+                <DataTemplate  x:DataType="local:Person">
+                    <StackPanel>
+                        <TextBlock FontSize="16" Text="{x:Bind Name}" FontWeight="Bold"  />
+                        <TextBlock FontSize="16" Text="{x:Bind Group.Name}" />
+                        <TextBlock FontSize="16" Text="{x:Bind DateOfStart}" />
+                        <TextBlock FontSize="16" Text="{x:Bind BaseSalary}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+        
     </Grid>
 </Page>
