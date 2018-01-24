@@ -45,10 +45,10 @@ namespace TestAppSysTech
             //    CurrentContentFrame.Navigate(typeof(PostingPage));
             //    SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed; //кнопка назад скрыта
             //}
-            //if (HistoryPageButton.IsSelected)
+            if (UserEditPageButton.IsSelected)
             //{
-            //    CurrentContentFrame.Navigate(typeof(HistoryPage));
-            //    SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible; //кнопка назад доступна
+                CurrentContentFrame.Navigate(typeof(UserEditPage));
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible; //кнопка назад доступна
             //}
             //if (MyChannelsPageButton.IsSelected)
             //{

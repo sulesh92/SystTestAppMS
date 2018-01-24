@@ -102,9 +102,9 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\20180124171426_MigrationInit.cs" />
-    <Compile Include="Migrations\20180124171426_MigrationInit.designer.cs">
-      <DependentUpon>20180124171426_MigrationInit.cs</DependentUpon>
+    <Compile Include="Migrations\20180124224631_FirstMigration.cs" />
+    <Compile Include="Migrations\20180124224631_FirstMigration.designer.cs">
+      <DependentUpon>20180124224631_FirstMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DataModelContextModelSnapshot.cs" />
     <Compile Include="Pages\UserEditPage.xaml.cs">
@@ -153,6 +153,7 @@
       <Version>6.0.6</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

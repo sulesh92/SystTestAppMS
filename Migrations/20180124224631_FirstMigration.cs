@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TestAppSysTech.Migrations
 {
-    public partial class MigrationInit : Migration
+    public partial class FirstMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,12 +28,13 @@ namespace TestAppSysTech.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     BaseSalary = table.Column<double>(nullable: false),
+                    DateOfStart = table.Column<DateTimeOffset>(nullable: false),
                     GroupId = table.Column<int>(nullable: true),
                     IsRoot = table.Column<bool>(nullable: false),
-                    Login = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true),
-                    Supervisor = table.Column<bool>(nullable: false)
+                    Login = table.Column<string>(maxLength: 40, nullable: true),
+                    Name = table.Column<string>(maxLength: 40, nullable: true),
+                    Password = table.Column<string>(maxLength: 40, nullable: true),
+                    Supervisor = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

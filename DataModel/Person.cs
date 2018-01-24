@@ -28,7 +28,7 @@ namespace TestAppSysTech
         [MaxLength(40)] [MinLength(6)]
         public string Password { get; set; }
 
-        public DateTime DateOfStart { get; set; }
+        public DateTimeOffset DateOfStart { get; set; }
 
         public int? GroupId { get; set; }
         public Group Group { get; set; }

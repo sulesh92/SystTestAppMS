@@ -8,11 +8,11 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <SolidColorBrush x:Key="EasyPostingAccentColor" Color="#0091d0"/>
+        <SolidColorBrush x:Key="AccentColor" Color="#0091d0"/>
 
         <Style TargetType="ListBox" x:Key="SplitMenuListBox">
 
-            <Setter Property="Background" Value="{StaticResource EasyPostingAccentColor}"/>
+            <Setter Property="Background" Value="{StaticResource AccentColor}"/>
         </Style>
 
         <Style TargetType="TextBlock" x:Key="SplitMenuIcon">
@@ -68,7 +68,7 @@
                             <TextBlock Style="{StaticResource SplitMenuText}" Text="Главная"/>
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem x:Name="HistoryPageButton">
+                    <ListBoxItem x:Name="UserEditPageButton">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Style="{StaticResource SplitMenuIcon}" Text="&#xE8F1;"/>
                             <TextBlock Style="{StaticResource SplitMenuText}" Text="История"/>

@@ -34,17 +34,22 @@ namespace TestAppSysTech.Migrations
 
                     b.Property<double>("BaseSalary");
 
+                    b.Property<DateTimeOffset>("DateOfStart");
+
                     b.Property<int?>("GroupId");
 
                     b.Property<bool>("IsRoot");
 
-                    b.Property<string>("Login");
+                    b.Property<string>("Login")
+                        .HasMaxLength(40);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasMaxLength(40);
 
-                    b.Property<string>("Password");
+                    b.Property<string>("Password")
+                        .HasMaxLength(40);
 
-                    b.Property<bool>("Supervisor");
+                    b.Property<string>("Supervisor");
 
                     b.HasKey("Id");
 
