@@ -7,7 +7,87 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <SolidColorBrush x:Key="EasyPostingAccentColor" Color="#0091d0"/>
 
-    </Grid>
+        <Style TargetType="ListBox" x:Key="SplitMenuListBox">
+
+            <Setter Property="Background" Value="{StaticResource EasyPostingAccentColor}"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="SplitMenuIcon">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="HorizontalAlignment"  Value="Left"/>
+            <Setter Property="VerticalAlignment"  Value="Bottom"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="FontSize" Value="24px"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="SplitMenuText">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="HorizontalAlignment"  Value="Left"/>
+            <Setter Property="VerticalAlignment"  Value="Bottom"/>
+            <Setter Property="FontSize" Value="18px"/>
+            <Setter Property="Margin" Value="20,0,0,0"/>
+        </Style>
+
+    </Page.Resources>
+
+    <SplitView x:Name="splitView"  
+               DisplayMode="CompactInline" 
+               CompactPaneLength="48" 
+               OpenPaneLength ="320"  
+               Background="White" 
+               PaneBackground="#0091d0">
+
+        <SplitView.Pane>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="HamburgerButton"
+                            FontFamily="Segoe MDL2 Assets" 
+                            Content="&#xE700;"
+                            FontSize="20px"
+                            Width="48px" 
+                            Height="48px" 
+                            Background="Transparent"
+                            Click="HamburgerButton_Click">
+                        <Button.Foreground>
+                            <SolidColorBrush Color="White"/>
+                        </Button.Foreground>
+                    </Button>
+                </StackPanel>
+
+                <ListBox x:Name="MainPageListBox" 
+                         SelectionMode="Single"
+                         SelectionChanged="MainPageListBox_Click" 
+                         SelectedIndex="0"
+                         Style="{StaticResource SplitMenuListBox}">
+                    <ListBoxItem x:Name="PostingPageButton">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource SplitMenuIcon}" Text="&#xE80F;"/>
+                            <TextBlock Style="{StaticResource SplitMenuText}" Text="Главная"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem x:Name="HistoryPageButton">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource SplitMenuIcon}" Text="&#xE8F1;"/>
+                            <TextBlock Style="{StaticResource SplitMenuText}" Text="История"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem x:Name="MyChannelsPageButton">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource SplitMenuIcon}" Text="&#xF0B2;"/>
+                            <TextBlock Style="{StaticResource SplitMenuText}" Text="Мои каналы"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+
+            </StackPanel>
+        </SplitView.Pane>
+        <Grid RenderTransformOrigin="0.496,0.501" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Frame x:Name="CurrentContentFrame">
+
+            </Frame>
+        </Grid>
+    </SplitView>
 </Page>

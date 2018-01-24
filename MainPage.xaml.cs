@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -26,5 +27,35 @@ namespace TestAppSysTech
         {
             this.InitializeComponent();
         }
+        /// <summary>
+        /// Обработчик кнопки бокового меню. 
+        /// Изменяет состояние панели на обратное (Открыто, Скрыто)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HamburgerButton_Click(object sender, RoutedEventArgs e)
+        {
+            splitView.IsPaneOpen = !splitView.IsPaneOpen;
+        }
+
+        private void MainPageListBox_Click(object sender, SelectionChangedEventArgs e)
+        {
+            //if (PostingPageButton.IsSelected)
+            //{
+            //    CurrentContentFrame.Navigate(typeof(PostingPage));
+            //    SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed; //кнопка назад скрыта
+            //}
+            //if (HistoryPageButton.IsSelected)
+            //{
+            //    CurrentContentFrame.Navigate(typeof(HistoryPage));
+            //    SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible; //кнопка назад доступна
+            //}
+            //if (MyChannelsPageButton.IsSelected)
+            //{
+            //    CurrentContentFrame.Navigate(typeof(MyChannelsPage));
+            //    SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible; //кнопка назад доступна
+            //}
+        }
     }
 }
+
