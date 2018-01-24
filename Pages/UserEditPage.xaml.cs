@@ -20,9 +20,9 @@ namespace TestAppSysTech.Pages
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
-    public sealed partial class AddPersonPage : Page
+    public sealed partial class UserEditPage : Page
     {
-        public AddPersonPage()
+        public UserEditPage()
         {
             this.InitializeComponent();
         }
