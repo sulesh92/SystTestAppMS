@@ -74,8 +74,9 @@ namespace TestAppSysTech
             p.Name = personNameTextbox.Text;
             p.BaseSalary = Convert.ToDouble(baseSalaryTextbox.Text);
 
-            var rootRight = rootComboBox.SelectedValue.ToString();
-            if (rootRight == "Админ")
+            TextBlock rootRight = rootComboBox.SelectedValue as TextBlock;
+            
+            if (rootRight.Text == "Админ")
             {
                 p.IsRoot = true;
             }
@@ -99,6 +100,19 @@ namespace TestAppSysTech
 
             p.Group = group;
 
+            //Список подчиненных
+             
+            var selectedItemsNumber = subPersonsList.SelectedItems.Count();
+
+            if (selectedItemsNumber > 0)
+            {
+                for (int i = 0; i < selectedItemsNumber; i++)
+                {
+                    Person subPerson = (Person)subPersonsList.SelectedItems[i];
+                    p.SubPersons.Add(subPerson);
+                }
+            }
+
             //создаем контекст данных для передачи профиля сотрудника в БД
             using (DataModelContext context = new DataModelContext())
             {
@@ -118,7 +132,7 @@ namespace TestAppSysTech
 
         private async void ShowMessageAsync(string message)
         {
-            var messageDialog = new MessageDialog("Выберите группу для сотрудника");
+            var messageDialog = new MessageDialog(message);
             await messageDialog.ShowAsync();
 
         }
