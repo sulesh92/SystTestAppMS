@@ -134,5 +134,15 @@ namespace TestAppSysTech
             addButtonTitle.Text = "Добавить";
             cancel_button.Visibility = Visibility.Collapsed;
         }
+
+        private void Edit_button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Delete_button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

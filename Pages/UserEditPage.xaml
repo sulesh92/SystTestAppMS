@@ -28,7 +28,7 @@
         <Style TargetType="TextBlock" x:Key ="gridBox">
             <Setter Property="FontFamily" Value="Segoe"/>
             <Setter Property="FontSize" Value="16"/>
-            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="120"/>
         </Style>
 
     </Page.Resources>
@@ -50,11 +50,27 @@
 
             <Button x:Name="cancel_button"  Style="{StaticResource ContentButtonStyle}" Click="CanselEditing_button_Click" MaxWidth="150" Margin="40,0,0,0" Background="Red" Visibility="Collapsed">
                 <StackPanel Orientation="Horizontal" >
-                    <TextBlock  FontFamily="Segoe MDL2 Assets" FontSize="20" TextAlignment="Left" Text="&#xE710;" Margin="0,0,10,0"/>
+                        <TextBlock  FontFamily="Segoe MDL2 Assets" FontSize="20" TextAlignment="Left" Text="&#xE711;" Margin="0,0,10,0"/>
                     <TextBlock   FontFamily="Segoe" FontSize="18" Text="Отменить" TextAlignment="Left" Height="22" VerticalAlignment="Top" />
                 </StackPanel>
             </Button>
+
+                <Button x:Name="edit_button"  Style="{StaticResource ContentButtonStyle}" HorizontalAlignment="Right" Click="Edit_button_Click" MaxWidth="200" Margin="40,0,0,0" Background="ForestGreen">
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock  FontFamily="Segoe MDL2 Assets" FontSize="20" TextAlignment="Left" Text="&#xE70F;" Margin="0,0,10,0"/>
+                        <TextBlock   FontFamily="Segoe" FontSize="18" Text="Редактировать" TextAlignment="Left" Height="22" VerticalAlignment="Top" />
+                    </StackPanel>
+                </Button>
+
+                <Button x:Name="delete_button"  Style="{StaticResource ContentButtonStyle}" HorizontalAlignment="Right" Click="Delete_button_Click" MaxWidth="200" Margin="40,0,0,0" Background="Black">
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock  FontFamily="Segoe MDL2 Assets" FontSize="20" TextAlignment="Left" Text="&#xE74D;" Margin="0,0,10,0"/>
+                        <TextBlock   FontFamily="Segoe" FontSize="18" Text="Удалить" TextAlignment="Left" Height="22" VerticalAlignment="Top" />
+                    </StackPanel>
+                </Button>
+
             </StackPanel>
+            
             <StackPanel x:Name="addPersonPanel" Orientation="Horizontal" Margin="40,20,20,40" Visibility="Collapsed">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -67,9 +83,10 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-
+                    
+                    
                     <StackPanel Grid.Column="0" Orientation="Vertical">
-                        <TextBlock >Имя сотрудника</TextBlock>
+                        <TextBlock Grid.Column="0">Имя сотрудника</TextBlock>
                         <TextBox x:Name="personNameTextbox" Margin="0,10,20,20"></TextBox>
                     </StackPanel>
 
@@ -116,61 +133,33 @@
                 </Grid>
             </StackPanel>
 
-            <ListView x:Name="personsList"   Margin="10">
-                <ListView.ItemTemplate>
-                    <DataTemplate  x:DataType="local:Person">
-                        <StackPanel Orientation="Horizontal">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                            </Grid>
-                            
-                            <StackPanel Margin="0,0,15,0" Orientation="Vertical" Grid.Column="0">
-                                <TextBlock Text="ФИО" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                <TextBlock Text="{x:Bind Name}" Style="{StaticResource gridBox}" />
+            <StackPanel >
+                <StackPanel Orientation="Horizontal" Margin="10">
+                    <TextBlock Text="ФИО"  Width="200" FontWeight="Bold" Style="{StaticResource gridBox}" />
+                    <TextBlock Text="Группа" FontWeight="Bold" Style="{StaticResource gridBox}" />
+                    <TextBlock Text="Ставка" FontWeight="Bold" Style="{StaticResource gridBox}" />
+                    <TextBlock Text="Логин" FontWeight="Bold" Style="{StaticResource gridBox}" />
+                    <TextBlock Text="Пароль" FontWeight="Bold" Style="{StaticResource gridBox}" />
+                    <TextBlock Text="Начальник" Width="150" FontWeight="Bold" Style="{StaticResource gridBox}" />
+                    <TextBlock Text="Дата поступления" Width="200" FontWeight="Bold" Style="{StaticResource gridBox}" />
+                </StackPanel>
+               
+                <ListView x:Name="personsList"  >
+                    <ListView.ItemTemplate>
+                        <DataTemplate  x:DataType="local:Person">
+                            <StackPanel Orientation="Horizontal"  Margin="5">
+                                    <TextBlock Text="{x:Bind Name}" Width="200" Style="{StaticResource gridBox}" />
+                                    <TextBlock Text="{x:Bind Group.Name}" Style="{StaticResource gridBox}"/>
+                                    <TextBlock Text="{x:Bind BaseSalary}" Style="{StaticResource gridBox}"/>
+                                    <TextBlock Text="{x:Bind Login}" Style="{StaticResource gridBox}"/>                        
+                                    <TextBlock Text="{x:Bind Password}" Style="{StaticResource gridBox}"/>
+                                <TextBlock  Text="{x:Bind Supervisor}" Width="150" Style="{StaticResource gridBox}"/>
+                                <TextBlock Text="{x:Bind DateOfStart}" Width="200" Style="{StaticResource gridBox}"/>       
                             </StackPanel>
-
-                            <StackPanel  Margin="0,0,15,0"  Orientation="Vertical" Grid.Column="1">
-                                <TextBlock Text="Группа" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                <TextBlock Text="{x:Bind Group.Name}" Style="{StaticResource gridBox}"/>
-                            </StackPanel>
-
-                            <StackPanel  Margin="0,0,15,0"  Orientation="Vertical" Grid.Column="2">
-                                <TextBlock Text="Базовая ставка" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                <TextBlock Text="{x:Bind BaseSalary}" Style="{StaticResource gridBox}"/>
-                            </StackPanel>
-
-                            <!--<StackPanel  Margin="0,0,15,0" Orientation="Vertical" Grid.Column="3">
-                                <TextBlock Text="Суперпользователь" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                <TextBlock Text="{x:Bind IsRoot}" Style="{StaticResource gridBox}"/>
-                            </StackPanel>-->
-
-                            <StackPanel  Margin="0,0,15,0" Orientation="Vertical" Grid.Column="4">
-                                <TextBlock Text="Логин" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                <TextBlock Text="{x:Bind Login}" Style="{StaticResource gridBox}"/>
-                            </StackPanel>
-
-                            <StackPanel  Margin="0,0,15,0" Orientation="Vertical" Grid.Column="5">
-                                <TextBlock Text="Пароль" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                <TextBlock Text="{x:Bind Password}" Style="{StaticResource gridBox}"/>
-                            </StackPanel>
-
-                            <StackPanel  Margin="0,0,15,0" Orientation="Vertical" Grid.Column="6">
-                                <TextBlock Text="Начальник" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                <TextBlock  Text="{x:Bind Supervisor}" Style="{StaticResource gridBox}"/>
-                            </StackPanel>
-
-                            <StackPanel Margin="0,0,15,0" Orientation="Vertical" Grid.Column="7">
-                                <TextBlock Text="Дата поступления" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                <TextBlock Text="{x:Bind DateOfStart}" Style="{StaticResource gridBox}"/>
-                            </StackPanel>
-                            
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>           
         </StackPanel>
     </Grid>
 </Page>
