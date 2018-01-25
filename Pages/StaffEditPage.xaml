@@ -8,7 +8,9 @@
     mc:Ignorable="d">
 
     <Page.Resources>
+        
         <local:DateTimeOffsetToStringConverter x:Key="MyDateTimeOffsetConverter"/>
+ 
 
         <SolidColorBrush x:Key="AccentColor" Color="#0091d0"/>
 
@@ -31,9 +33,9 @@
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="Width" Value="120"/>
         </Style>
-
-
     </Page.Resources>
+
+
 
 
 
@@ -84,7 +86,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
 
@@ -131,14 +133,25 @@
                         <ComboBox x:Name="groupList"  Margin="0,10,0,0"></ComboBox>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="8" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
-
-                    </StackPanel>
-
+                        <StackPanel Grid.Column="8">
+                            <ListBox ItemsSource="{x:Bind persons}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="local:Person">
+                                        <StackPanel Margin="10" Orientation="Horizontal">
+                                            <TextBlock FontSize="16" Text="{x:Bind Name}" HorizontalAlignment="Center" Margin="0,0,5,5" Width="150" />
+                                            <TextBlock FontSize="16" Text="{x:Bind Group.Name}" HorizontalAlignment="Center" Margin="0,0,5,5" />
+                                    </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
                 </Grid>
             </StackPanel>
 
             <StackPanel >
+
+                
+                
                 <StackPanel Orientation="Horizontal" Margin="10">
                     <TextBlock Text="ФИО"  Width="200" FontWeight="Bold" Style="{StaticResource gridBox}" />
                     <TextBlock Text="Группа" FontWeight="Bold" Style="{StaticResource gridBox}" />
@@ -158,7 +171,7 @@
                                 <TextBlock Text="{x:Bind BaseSalary}" Style="{StaticResource gridBox}"/>
                                 <TextBlock Text="{x:Bind Login}" Style="{StaticResource gridBox}"/>
                                 <TextBlock Text="{x:Bind Password}" Style="{StaticResource gridBox}"/>
-                                <TextBlock  Text="{x:Bind Supervisor}" Width="150" Style="{StaticResource gridBox}"/>
+                                <TextBlock Text="{x:Bind Supervisor}" Width="150" Style="{StaticResource gridBox}"/>
                                 <TextBlock Text="{x:Bind DateOfStart, Converter={StaticResource MyDateTimeOffsetConverter}}" Width="200" Style="{StaticResource gridBox}"/>
                             </StackPanel>
                         </DataTemplate>

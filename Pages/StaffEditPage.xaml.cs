@@ -24,32 +24,30 @@ namespace TestAppSysTech
     /// </summary>
     public sealed partial class StaffEditPage : Page
     {
+        List<Group> groups;
+        List<Person> persons;
+
         public StaffEditPage()
         {
             this.InitializeComponent();
             this.Loaded += StaffEditPage_Loaded;
+
+            using (DataModelContext context = new DataModelContext())
+            {
+                groups = context.Groups.ToList();
+                persons = context.Persons.ToList();
+            }
         }
-
-
-        List<Group> groups;
-        List<Person> persons;
 
         private void StaffEditPage_Loaded(object sender, RoutedEventArgs e)
         {
-            using (DataModelContext context = new DataModelContext())
-            {
-                persons = context.Persons.ToList();
-                groups = context.Groups.ToList();
-
-
-            }
             personsList.ItemsSource = persons;
+
             supevisersList.ItemsSource = persons;
             supevisersList.DisplayMemberPath = "Name";
+
             groupList.ItemsSource = groups;
             groupList.DisplayMemberPath = "Name";
-
-
         }
 
         private void AddPerson_button_Click(object sender, RoutedEventArgs e)
