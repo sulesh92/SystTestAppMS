@@ -49,11 +49,15 @@ namespace TestAppSysTech.Migrations
                     b.Property<string>("Password")
                         .HasMaxLength(40);
 
+                    b.Property<int?>("PersonId");
+
                     b.Property<string>("Supervisor");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
+
+                    b.HasIndex("PersonId");
 
                     b.ToTable("Persons");
                 });
@@ -87,6 +91,10 @@ namespace TestAppSysTech.Migrations
                     b.HasOne("TestAppSysTech.Group", "Group")
                         .WithMany("Persons")
                         .HasForeignKey("GroupId");
+
+                    b.HasOne("TestAppSysTech.Person")
+                        .WithMany("SubPersons")
+                        .HasForeignKey("PersonId");
                 });
 
             modelBuilder.Entity("TestAppSysTech.Salary", b =>

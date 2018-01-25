@@ -95,6 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CommonTools.cs" />
     <Compile Include="DataModel\DataModel.cs" />
     <Compile Include="DataModel\Group.cs" />
     <Compile Include="DataModel\Person.cs" />
@@ -102,15 +103,15 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\20180124224631_FirstMigration.cs" />
-    <Compile Include="Migrations\20180124224631_FirstMigration.designer.cs">
-      <DependentUpon>20180124224631_FirstMigration.cs</DependentUpon>
+    <Compile Include="Migrations\20180125125542_FirstMigration.cs" />
+    <Compile Include="Migrations\20180125125542_FirstMigration.designer.cs">
+      <DependentUpon>20180125125542_FirstMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DataModelContextModelSnapshot.cs" />
-    <Compile Include="Pages\UserEditPage.xaml.cs">
-      <DependentUpon>UserEditPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Pages\StaffEditPage.xaml.cs">
+      <DependentUpon>StaffEditPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -137,7 +138,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Pages\UserEditPage.xaml">
+    <Page Include="Pages\StaffEditPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

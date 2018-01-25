@@ -47,7 +47,7 @@ namespace TestAppSysTech
             //}
             if (UserEditPageButton.IsSelected)
             //{
-                CurrentContentFrame.Navigate(typeof(UserEditPage));
+                CurrentContentFrame.Navigate(typeof(StaffEditPage));
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible; //кнопка назад доступна
             //}
             //if (MyChannelsPageButton.IsSelected)

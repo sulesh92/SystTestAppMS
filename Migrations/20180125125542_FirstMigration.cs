@@ -34,6 +34,7 @@ namespace TestAppSysTech.Migrations
                     Login = table.Column<string>(maxLength: 40, nullable: true),
                     Name = table.Column<string>(maxLength: 40, nullable: true),
                     Password = table.Column<string>(maxLength: 40, nullable: true),
+                    PersonId = table.Column<int>(nullable: true),
                     Supervisor = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -43,6 +44,12 @@ namespace TestAppSysTech.Migrations
                         name: "FK_Persons_Groups_GroupId",
                         column: x => x.GroupId,
                         principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Persons_Persons_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Persons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -75,6 +82,11 @@ namespace TestAppSysTech.Migrations
                 name: "IX_Persons_GroupId",
                 table: "Persons",
                 column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Persons_PersonId",
+                table: "Persons",
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Salaries_PersonId",

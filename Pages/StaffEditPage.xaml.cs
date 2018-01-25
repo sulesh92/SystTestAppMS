@@ -22,25 +22,25 @@ namespace TestAppSysTech
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
-    public sealed partial class UserEditPage : Page
+    public sealed partial class StaffEditPage : Page
     {
-        //TODO: по возможности убрать их в локальные 
+        public StaffEditPage()
+        {
+            this.InitializeComponent();
+            this.Loaded += StaffEditPage_Loaded;
+        }
+
 
         List<Group> groups;
         List<Person> persons;
 
-        public UserEditPage()
-        {
-            this.InitializeComponent();
-            this.Loaded += UserEditPage_Loaded;
-        }
-
-        private void UserEditPage_Loaded(object sender, RoutedEventArgs e)
+        private void StaffEditPage_Loaded(object sender, RoutedEventArgs e)
         {
             using (DataModelContext context = new DataModelContext())
             {
                 persons = context.Persons.ToList();
                 groups = context.Groups.ToList();
+
 
             }
             personsList.ItemsSource = persons;
@@ -48,6 +48,8 @@ namespace TestAppSysTech
             supevisersList.DisplayMemberPath = "Name";
             groupList.ItemsSource = groups;
             groupList.DisplayMemberPath = "Name";
+
+
         }
 
         private void AddPerson_button_Click(object sender, RoutedEventArgs e)
@@ -111,10 +113,11 @@ namespace TestAppSysTech
                     persons.Add(p);
                 }
             }
-            
+
 
             ChangeInterface();
         }
+
         private async void ShowMessageAsync(string message)
         {
             var messageDialog = new MessageDialog("Выберите группу для сотрудника");
@@ -144,5 +147,9 @@ namespace TestAppSysTech
         {
 
         }
+
+        
     }
+
+   
 }
