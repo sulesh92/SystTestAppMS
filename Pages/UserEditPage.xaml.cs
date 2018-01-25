@@ -25,7 +25,7 @@ namespace TestAppSysTech
     public sealed partial class UserEditPage : Page
     {
         //TODO: по возможности убрать их в локальные 
-        List<Person> supervisers;
+
         List<Group> groups;
         List<Person> persons;
 
@@ -41,13 +41,13 @@ namespace TestAppSysTech
             {
                 persons = context.Persons.ToList();
                 groups = context.Groups.ToList();
-                 
+
             }
             personsList.ItemsSource = persons;
-            supevisersList.ItemsSource = supervisers;
+            supevisersList.ItemsSource = persons;
             supevisersList.DisplayMemberPath = "Name";
             groupList.ItemsSource = groups;
-            groupList.DisplayMemberPath = "Name";           
+            groupList.DisplayMemberPath = "Name";
         }
 
         private void AddPerson_button_Click(object sender, RoutedEventArgs e)
@@ -57,28 +57,28 @@ namespace TestAppSysTech
                 addPerson_button.Background = new SolidColorBrush(Color.FromArgb(255, 119, 221, 119));
                 addButtonTitle.Text = "Сохранить";
                 addPersonPanel.Visibility = Visibility.Visible;
+                cancel_button.Visibility = Visibility.Visible;
 
                 return;
             }
-                //создаем группу, выбранную для сотрудника
-                Group group = groupList.SelectedItem as Group;
-                if (group == null)
-                {
-                    ShowMessageAsync("Выберите группу для сотрудника");
-      
-                }
+            //создаем группу, выбранную для сотрудника
+            Group group = groupList.SelectedItem as Group;
+            if (group == null)
+            {
+                ShowMessageAsync("Выберите группу для сотрудника");
+            }
 
-                //заполняем профиль сотрудника 
-                Person p = new Person();
+            //заполняем профиль сотрудника 
+            Person p = new Person();
 
-                p.Name = personNameTextbox.Text;
-                p.BaseSalary = Convert.ToDouble(baseSalaryTextbox.Text);
+            p.Name = personNameTextbox.Text;
+            p.BaseSalary = Convert.ToDouble(baseSalaryTextbox.Text);
 
-                var rootRight = rootComboBox.SelectedValue.ToString(); 
-                if(rootRight == "Админ")
-                {
-                    p.IsRoot = true;
-                }
+            var rootRight = rootComboBox.SelectedValue.ToString();
+            if (rootRight == "Админ")
+            {
+                p.IsRoot = true;
+            }
 
             if (supevisersList.SelectedValue != null)
             {
@@ -89,29 +89,50 @@ namespace TestAppSysTech
             p.Password = passwordTextbox.Text;
 
             if (dateOfStartPicker.Date.HasValue)
-                {
-                    p.DateOfStart = (DateTimeOffset)dateOfStartPicker.Date;
-                }
-                else
-                {
-                    ShowMessageAsync("Выберите дату начала работы сотрудника");
-                }
+            {
+                p.DateOfStart = (DateTimeOffset)dateOfStartPicker.Date;
+            }
+            else
+            {
+                ShowMessageAsync("Выберите дату начала работы сотрудника");
+            }
 
-                p.Group = group;
+            p.Group = group;
 
             //создаем контекст данных для передачи профиля сотрудника в БД
-            using(DataModelContext context = new DataModelContext())
+            using (DataModelContext context = new DataModelContext())
             {
                 context.Groups.Attach(group);
                 context.Persons.Add(p);
                 context.SaveChanges();
+
+                if (context.SaveChanges() > 0)
+                {
+                    persons.Add(p);
+                }
             }
+            
+
+            ChangeInterface();
         }
         private async void ShowMessageAsync(string message)
         {
             var messageDialog = new MessageDialog("Выберите группу для сотрудника");
             await messageDialog.ShowAsync();
 
+        }
+
+        private void CanselEditing_button_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeInterface();
+        }
+
+        private void ChangeInterface()
+        {
+            addPersonPanel.Visibility = Visibility.Collapsed;
+            addPerson_button.Background = new SolidColorBrush(Color.FromArgb(255, 198, 100, 82));
+            addButtonTitle.Text = "Добавить";
+            cancel_button.Visibility = Visibility.Collapsed;
         }
     }
 }
