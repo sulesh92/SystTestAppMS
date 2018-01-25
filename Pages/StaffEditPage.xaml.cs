@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
@@ -26,6 +27,7 @@ namespace TestAppSysTech
     {
         List<Group> groups;
         List<Person> persons;
+        List<Subordinate> subordinates;
 
         public StaffEditPage()
         {
@@ -36,6 +38,7 @@ namespace TestAppSysTech
             {
                 groups = context.Groups.ToList();
                 persons = context.Persons.ToList();
+                subordinates = context.Subordinates.ToList();
             }
         }
 
@@ -54,33 +57,56 @@ namespace TestAppSysTech
         {
             if (addPersonPanel.Visibility == Visibility.Collapsed)
             {
-                addPerson_button.Background = new SolidColorBrush(Color.FromArgb(255, 119, 221, 119));
-                addButtonTitle.Text = "Сохранить";
-                addPersonPanel.Visibility = Visibility.Visible;
-                cancel_button.Visibility = Visibility.Visible;
-
+                ChangeInterface("showPanel");
                 return;
             }
+
             //создаем группу, выбранную для сотрудника
             Group group = groupList.SelectedItem as Group;
-            if (group == null)
+            if (groupList.SelectedItem == null)
             {
                 ShowMessageAsync("Выберите группу для сотрудника");
+                return;
             }
-
+            
             //заполняем профиль сотрудника 
             Person p = new Person();
 
-            p.Name = personNameTextbox.Text;
-            p.BaseSalary = Convert.ToDouble(baseSalaryTextbox.Text);
+            p.Group = group;
 
-            TextBlock rootRight = rootComboBox.SelectedValue as TextBlock;
-            
-            if (rootRight.Text == "Админ")
+            if (string.IsNullOrEmpty(personNameTextbox.Text))
             {
-                p.IsRoot = true;
+                ShowMessageAsync("Укажите имя сотрудника");
+                return;
+            }
+            else
+            {
+                p.Name = personNameTextbox.Text;
             }
 
+            try
+            {
+                p.BaseSalary = Convert.ToDouble(baseSalaryTextbox.Text);
+            }
+            catch (Exception)
+            {
+                ShowMessageAsync("Недопустимые символы введены в поле Ставка");
+                return;
+            }
+
+            TextBlock rootRight = rootComboBox.SelectedValue as TextBlock;
+
+            //если пользователь не устанавливает значение, то комплиятор выдает ошибку
+            try
+            {
+                if (rootRight.Text == "Админ") 
+                {
+                    p.IsRoot = true;
+                }
+            }
+            catch { } //Значение isRoot = false - устанавливается по умолчанию
+           
+            //определяется начальник
             if (supevisersList.SelectedValue != null)
             {
                 p.Supervisor = supevisersList.SelectedValue.ToString();
@@ -97,37 +123,53 @@ namespace TestAppSysTech
             {
                 ShowMessageAsync("Выберите дату начала работы сотрудника");
             }
-
-            p.Group = group;
-
-            //Список подчиненных
-             
-            var selectedItemsNumber = subPersonsList.SelectedItems.Count();
-
-            if (selectedItemsNumber > 0)
-            {
-                for (int i = 0; i < selectedItemsNumber; i++)
-                {
-                    Person subPerson = (Person)subPersonsList.SelectedItems[i];
-                    p.SubPersons.Add(subPerson);
-                }
-            }
-
+         
             //создаем контекст данных для передачи профиля сотрудника в БД
             using (DataModelContext context = new DataModelContext())
             {
                 context.Groups.Attach(group);
                 context.Persons.Add(p);
                 context.SaveChanges();
+                personsList.ItemsSource = context.Persons.ToList();
+            }
 
-                if (context.SaveChanges() > 0)
+            //persons.Add(p); 
+          
+
+            //Заполняем таблицу подчиненных со ссылкой на начальника
+            int subNumber = subPersonsList.SelectedItems.Count;
+            
+
+
+            if (subNumber > 0)
+            {
+              
+                using (DataModelContext context = new DataModelContext())
                 {
-                    persons.Add(p);
+                    for (int i = 0; i < subNumber; i++)
+                    {
+                        Subordinate subordinate = new Subordinate();
+
+                        Person selectedPerson = (Person)subPersonsList.SelectedItems[i]; //сохраняем данные о выбранном пользователе
+                        subordinate.Name = selectedPerson.Name;
+                        subordinate.Group = selectedPerson.Group.Name;
+                        subordinate.PersonId = p.Id;
+
+                        context.Persons.Attach(p);
+                        context.Subordinates.Add(subordinate);
+                        context.SaveChanges();
+                    }
                 }
             }
 
+           
+            ChangeInterface("hidePanel");
+        }
 
-            ChangeInterface();
+
+        private void AddSubordinate(Person person, Subordinate subordinate)
+        {
+
         }
 
         private async void ShowMessageAsync(string message)
@@ -139,29 +181,140 @@ namespace TestAppSysTech
 
         private void CanselEditing_button_Click(object sender, RoutedEventArgs e)
         {
-            ChangeInterface();
+            ChangeInterface("hidePanel");
         }
 
-        private void ChangeInterface()
+        private void ChangeInterface(string status)
         {
-            addPersonPanel.Visibility = Visibility.Collapsed;
-            addPerson_button.Background = new SolidColorBrush(Color.FromArgb(255, 198, 100, 82));
-            addButtonTitle.Text = "Добавить";
-            cancel_button.Visibility = Visibility.Collapsed;
-        }
+            switch (status)
+            {
+                case "showPanel":
 
+                    addPerson_button.Background = new SolidColorBrush(Color.FromArgb(255, 119, 221, 119));
+                    addButtonTitle.Text = "Сохранить";
+                    addPersonPanel.Visibility = Visibility.Visible;
+                    cancel_button.Visibility = Visibility.Visible;
+                    subPersonListPanel.Visibility = Visibility.Visible;
+                    break;
+
+                case "hidePanel":
+
+                    addPersonPanel.Visibility = Visibility.Collapsed;
+                    addPerson_button.Background = new SolidColorBrush(Color.FromArgb(255, 198, 100, 82));
+                    addButtonTitle.Text = "Добавить";
+                    cancel_button.Visibility = Visibility.Collapsed;
+                    subPersonListPanel.Visibility = Visibility.Collapsed;
+                    personNameTextbox.Text = "";
+                    baseSalaryTextbox.Text = "";
+                    rootComboBox.SelectedItem = null;
+                    dateOfStartPicker.Date = null;
+                    supevisersList.SelectedValue = null;
+                    loginTextbox.Text = "";
+                    passwordTextbox.Text = "";
+                    groupList.SelectedItem = null;
+                    break;
+            }
+
+
+
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Edit_button_Click(object sender, RoutedEventArgs e)
         {
+            Person person = personsList.SelectedItem as Person;
+
+            personNameTextbox.Text = person.Name;
+            baseSalaryTextbox.Text = person.BaseSalary.ToString();
+            rootComboBox.SelectedItem = person.IsRoot;
+            dateOfStartPicker.Date = person.DateOfStart;
+            supevisersList.SelectedValue = person.Supervisor;
+            loginTextbox.Text = person.Login;
+            passwordTextbox.Text = person.Password;
+            groupList.SelectedItem = person.Group;
+            
+        }
+
+        public void SetDataToProfile (Person p)
+        {
+             
 
         }
 
+
+
+        /// <summary>
+        /// Удаляет, выбранные пользователем, данные из БД
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Delete_button_Click(object sender, RoutedEventArgs e)
+        {
+           using (DataModelContext context = new DataModelContext())
+            {
+                for (int i = 0; i < personsList.SelectedItems.Count; i++)
+                {
+                    Person person = personsList.SelectedItems[i] as Person;
+                    context.Persons.Remove(person);
+                    context.SaveChanges();
+                }
+                personsList.ItemsSource = context.Persons.ToList();
+            }
+
+        }
+
+
+        /// <summary>
+        /// Изменяет цвет кнопки в зависимости от количества выбранных строк 
+        /// на панели данных
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void personsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int selectedItemsNumber = personsList.SelectedItems.Count();
+            if (selectedItemsNumber > 1)
+            {
+                delete_button.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                delete_button.IsEnabled = true;
+                edit_button.Background = new SolidColorBrush(Color.FromArgb(255, 83, 83, 83));
+                edit_button.IsEnabled = false;
+                showSubordinates_button.Background = new SolidColorBrush(Color.FromArgb(255, 83, 83, 83));
+                showSubordinates_button.IsEnabled = false;
+                return;
+            }
+            if(selectedItemsNumber == 1)
+            {
+                delete_button.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                delete_button.IsEnabled = true;
+                edit_button.Background = new SolidColorBrush(Color.FromArgb(255, 255, 215, 0));
+                edit_button.IsEnabled = true;
+                showSubordinates_button.Background = new SolidColorBrush(Color.FromArgb(255, 206, 31, 99));
+                showSubordinates_button.IsEnabled = true;
+                return;
+            }
+            else
+            {
+                delete_button.Background = new SolidColorBrush(Color.FromArgb(255, 83, 83, 83));
+                delete_button.IsEnabled = false;
+                edit_button.Background = new SolidColorBrush(Color.FromArgb(255, 83, 83, 83));
+                edit_button.IsEnabled = false;
+                showSubordinates_button.Background = new SolidColorBrush(Color.FromArgb(255, 83, 83, 83));
+                showSubordinates_button.IsEnabled = false;
+                return;
+            }
+            
+        }
+
+        private void ShowSubordinates_button_Click(object sender, RoutedEventArgs e)
         {
 
         }
-
-        
     }
 
-   
+
 }

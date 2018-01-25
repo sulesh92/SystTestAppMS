@@ -36,7 +36,7 @@ namespace TestAppSysTech.Migrations
 
                     b.Property<DateTimeOffset>("DateOfStart");
 
-                    b.Property<int?>("GroupId");
+                    b.Property<int>("GroupId");
 
                     b.Property<bool>("IsRoot");
 
@@ -49,15 +49,11 @@ namespace TestAppSysTech.Migrations
                     b.Property<string>("Password")
                         .HasMaxLength(40);
 
-                    b.Property<int?>("PersonId");
-
                     b.Property<string>("Supervisor");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
-
-                    b.HasIndex("PersonId");
 
                     b.ToTable("Persons");
                 });
@@ -75,7 +71,7 @@ namespace TestAppSysTech.Migrations
 
                     b.Property<int>("NumberOfSubordinates");
 
-                    b.Property<int?>("PersonId");
+                    b.Property<int>("PersonId");
 
                     b.Property<string>("Year");
 
@@ -86,22 +82,46 @@ namespace TestAppSysTech.Migrations
                     b.ToTable("Salaries");
                 });
 
+            modelBuilder.Entity("TestAppSysTech.Subordinate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Group");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("PersonId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("Subordinates");
+                });
+
             modelBuilder.Entity("TestAppSysTech.Person", b =>
                 {
                     b.HasOne("TestAppSysTech.Group", "Group")
                         .WithMany("Persons")
-                        .HasForeignKey("GroupId");
-
-                    b.HasOne("TestAppSysTech.Person")
-                        .WithMany("SubPersons")
-                        .HasForeignKey("PersonId");
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("TestAppSysTech.Salary", b =>
                 {
                     b.HasOne("TestAppSysTech.Person", "Person")
                         .WithMany("SalaryHistory")
-                        .HasForeignKey("PersonId");
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("TestAppSysTech.Subordinate", b =>
+                {
+                    b.HasOne("TestAppSysTech.Person", "Person")
+                        .WithMany("Subordinates")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }

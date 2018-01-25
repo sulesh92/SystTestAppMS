@@ -31,22 +31,21 @@ namespace TestAppSysTech
         public DateTimeOffset DateOfStart { get; set; }
         
         //Ссылка на группу к которой относится сотрудник
-        public int? GroupId { get; set; }
+        public int GroupId { get; set; }
         public Group Group { get; set; }
 
         //Зарплатная ведомость сотрудника
         public ICollection<Salary> SalaryHistory { get; set; }
 
         ////Список подчиненных
+        public ICollection<Subordinate> Subordinates { get; set; }
 
-        public virtual ICollection<Person> SubPersons { get; set; }
-        //public virtual List<Person> Supervisers { get; set; }
 
         //Конструктор класса Person
         public Person()
         {
-            SubPersons = new List<Person>();
             SalaryHistory = new List<Salary>();
+            Subordinates = new List<Subordinate>();
         }
     }
 }

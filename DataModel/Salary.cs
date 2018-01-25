@@ -15,7 +15,7 @@ namespace TestAppSysTech
         public string Group { get; set; }
         public double CurrentSalary { get; set; }
 
-        public int? PersonId { get; set; }
+        public int PersonId { get; set; }
         public Person Person { get; set; }
     }
 }

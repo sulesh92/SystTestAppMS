@@ -103,15 +103,16 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\20180125125542_FirstMigration.cs" />
-    <Compile Include="Migrations\20180125125542_FirstMigration.designer.cs">
-      <DependentUpon>20180125125542_FirstMigration.cs</DependentUpon>
+    <Compile Include="Migrations\20180125205404_MigrationInit.cs" />
+    <Compile Include="Migrations\20180125205404_MigrationInit.designer.cs">
+      <DependentUpon>20180125205404_MigrationInit.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DataModelContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pages\StaffEditPage.xaml.cs">
       <DependentUpon>StaffEditPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DataModel\Subordinate.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

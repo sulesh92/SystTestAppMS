@@ -4,18 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestAppSysTech 
+namespace TestAppSysTech
 {
-    public class Group
+    public class Subordinate
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
-        public ICollection<Person> Persons { get; set; }
-
-        public Group()
-        {
-            Persons = new List<Person>();
-        }
+        public string Group { get; set; }
+        
+        public int PersonId { get; set; }
+        public Person Person { get; set; }
     }
 }

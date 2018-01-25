@@ -7,7 +7,7 @@ namespace TestAppSysTech
         public DbSet<Person> Persons { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Salary> Salaries { get; set; }
-         
+        public DbSet<Subordinate> Subordinates { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
