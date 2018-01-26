@@ -18,7 +18,6 @@ namespace TestAppSysTech
     {
         List<Group> groups;
         List<Person> persons;
-        List<Subordinate> subordinates;
         Person newPerson = new Person();
 
         public StaffEditPage()
@@ -30,10 +29,15 @@ namespace TestAppSysTech
             {
                 groups = context.Groups.ToList();
                 persons = context.Persons.ToList();
-                subordinates = context.Subordinates.ToList();
             }
         }
 
+        /// <summary>
+        /// Устанавливает ресурсы ListView 
+        /// для отображения информации
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StaffEditPage_Loaded(object sender, RoutedEventArgs e)
         {
             personsList.ItemsSource = persons;
@@ -45,6 +49,12 @@ namespace TestAppSysTech
             groupList.DisplayMemberPath = "Name";
         }
 
+        /// <summary>
+        /// Проверяет наличие данных на панели AddPersonPanel. Вызывает методы по считыванию
+        /// и сохранению данных из полей в БД. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddPerson_button_Click(object sender, RoutedEventArgs e)
         {
             //Открывает панель добавления сотрудников
@@ -221,9 +231,13 @@ namespace TestAppSysTech
         {
             var messageDialog = new MessageDialog(message);
             await messageDialog.ShowAsync();
-
         }
 
+        /// <summary>
+        /// Отображает и скрывает панель AddPersonPanel, а также 
+        /// очищает введенные данные
+        /// </summary>
+        /// <param name="status"></param>
         private void ChangeInterface(string status)
         {
             switch (status)
@@ -256,14 +270,18 @@ namespace TestAppSysTech
             }
         }
         
+        /// <summary>
+        /// Вызывает ChangeInterface, для отмены редактирования
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CanselEditing_button_Click(object sender, RoutedEventArgs e)
         {
             ChangeInterface("hidePanel");
         }
 
-      
         /// <summary>
-        /// 
+        /// Открывает панель редактирования и заполняет необходимые поля
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -302,7 +320,6 @@ namespace TestAppSysTech
             }
 
         }
-
 
         /// <summary>
         /// Изменяет цвет кнопки в зависимости от количества выбранных строк 
@@ -348,6 +365,11 @@ namespace TestAppSysTech
 
         private void ShowSubordinates_button_Click(object sender, RoutedEventArgs e)
         {
+            Person p = personsList.SelectedItem as Person;
+            subordinatesList.ItemsSource = p.Subordinates;
+
+            subordinatesList.Visibility = Visibility.Visible;
+
 
         }
     }
