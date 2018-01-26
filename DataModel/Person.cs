@@ -20,8 +20,6 @@ namespace TestAppSysTech
         [DefaultValue("false")]
         public bool IsRoot { get; set; }
 
-        public string Supervisor { get; set; }
-
         [MaxLength(40)]
         public string Login { get; set; }
 

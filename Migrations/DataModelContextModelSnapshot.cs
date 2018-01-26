@@ -49,8 +49,6 @@ namespace TestAppSysTech.Migrations
                     b.Property<string>("Password")
                         .HasMaxLength(40);
 
-                    b.Property<string>("Supervisor");
-
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");

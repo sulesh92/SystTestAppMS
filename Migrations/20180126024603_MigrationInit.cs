@@ -33,8 +33,7 @@ namespace TestAppSysTech.Migrations
                     IsRoot = table.Column<bool>(nullable: false),
                     Login = table.Column<string>(maxLength: 40, nullable: true),
                     Name = table.Column<string>(maxLength: 40, nullable: true),
-                    Password = table.Column<string>(maxLength: 40, nullable: true),
-                    Supervisor = table.Column<string>(nullable: true)
+                    Password = table.Column<string>(maxLength: 40, nullable: true)
                 },
                 constraints: table =>
                 {

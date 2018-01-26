@@ -8,7 +8,7 @@ using TestAppSysTech;
 namespace TestAppSysTech.Migrations
 {
     [DbContext(typeof(DataModelContext))]
-    [Migration("20180125205404_MigrationInit")]
+    [Migration("20180126024603_MigrationInit")]
     partial class MigrationInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,8 +49,6 @@ namespace TestAppSysTech.Migrations
 
                     b.Property<string>("Password")
                         .HasMaxLength(40);
-
-                    b.Property<string>("Supervisor");
 
                     b.HasKey("Id");
 

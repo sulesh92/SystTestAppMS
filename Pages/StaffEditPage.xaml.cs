@@ -94,7 +94,7 @@ namespace TestAppSysTech
                 return;
             }
 
-            if(newPerson == null)
+            if(newPerson.Name == null)
             {
                 newPerson = SetDataToProfile(newPerson, false);
             }
@@ -104,14 +104,19 @@ namespace TestAppSysTech
             }
 
             //Заполняем таблицу подчиненных со ссылкой на начальника
-                  
-            if (subPersonsList.SelectedItems.Count > 0)
+            var index = subPersonsList.SelectedItems.Count;
+            if (index > 0)
             {
-                AddSubordinate();
+                for(int i = 0; i < index; i++)
+                {
+                    Person selectedPerson = (Person)subPersonsList.SelectedItems[i]; //сохраняем данные о выбранном пользователе
+                    AddSubordinate(selectedPerson, newPerson);
+                }
+                 
             }
 
             //Очищяем поля
-            newPerson = null;          
+            newPerson = new Person();          
 
             ChangeInterface("hidePanel");
         }
@@ -143,7 +148,8 @@ namespace TestAppSysTech
             //добавляет начальника
             if (supevisersList.SelectedValue != null)
             {
-                p.Supervisor = supevisersList.SelectedValue.ToString();
+                Person superviser = supevisersList.SelectedItem as Person;
+                AddSubordinate(p, superviser);
             }
 
             p.Login = loginTextbox.Text;
@@ -157,7 +163,6 @@ namespace TestAppSysTech
                 case false: p = AddProfileToTable(p, g);
                     break;
             }
-           
 
             return p;
         }
@@ -206,25 +211,22 @@ namespace TestAppSysTech
         /// <summary>
         /// Сохраняет выбранных подчиненых в таблицу Subordinate
         /// </summary>
-        private void AddSubordinate()
+        private void AddSubordinate(Person subPerson, Person superviser)
         {
             using (DataModelContext context = new DataModelContext())
             {
-                for (int i = 0; i < subPersonsList.SelectedItems.Count; i++)
-                {
                     Subordinate subordinate = new Subordinate();
 
-                    Person selectedPerson = (Person)subPersonsList.SelectedItems[i]; //сохраняем данные о выбранном пользователе
-                    subordinate.Name = selectedPerson.Name;
-                    subordinate.Group = selectedPerson.Group.Name;
-                    subordinate.PersonId = newPerson.Id;
+                    subordinate.Name = subPerson.Name;
+                    subordinate.Group = subPerson.Group.Name;
 
-                    context.Persons.Attach(newPerson);
+                    subordinate.PersonId = superviser.Id;
+                    context.Persons.Attach(superviser);
+
                     context.Subordinates.Add(subordinate);
-                    context.SaveChanges();
-                }
-            }
 
+                    context.SaveChanges();
+            }
         }
 
         private async void ShowMessageAsync(string message)
@@ -249,6 +251,8 @@ namespace TestAppSysTech
                     addPersonPanel.Visibility = Visibility.Visible;
                     cancel_button.Visibility = Visibility.Visible;
                     subPersonListPanel.Visibility = Visibility.Visible;
+                    subordinatesListPanel.Visibility = Visibility.Collapsed;
+
                     break;
 
                 case "hidePanel":
@@ -258,6 +262,8 @@ namespace TestAppSysTech
                     addButtonTitle.Text = "Добавить";
                     cancel_button.Visibility = Visibility.Collapsed;
                     subPersonListPanel.Visibility = Visibility.Collapsed;
+                    subordinatesListPanel.Visibility = Visibility.Collapsed;
+
                     personNameTextbox.Text = "";
                     baseSalaryTextbox.Text = "";
                     rootComboBox.SelectedItem = null;
@@ -293,7 +299,6 @@ namespace TestAppSysTech
             baseSalaryTextbox.Text = newPerson.BaseSalary.ToString();
             rootComboBox.SelectedItem = newPerson.IsRoot;
             dateOfStartPicker.Date = newPerson.DateOfStart;
-            supevisersList.SelectedValue = newPerson.Supervisor;
             loginTextbox.Text = newPerson.Login;
             passwordTextbox.Text = newPerson.Password;
             groupList.SelectedItem = newPerson.Group;
@@ -366,11 +371,18 @@ namespace TestAppSysTech
         private void ShowSubordinates_button_Click(object sender, RoutedEventArgs e)
         {
             Person p = personsList.SelectedItem as Person;
-            subordinatesList.ItemsSource = p.Subordinates;
+               
+            using (DataModelContext context = new DataModelContext())
+            {
+                //var subordinates = from s in context.Subordinates
+                //                   where s.PersonId.Equals(p.Id)
+                //                   select s;
 
-            subordinatesList.Visibility = Visibility.Visible;
-
-
+                var subordinates = context.Subordinates.Where(s => s.PersonId == p.Id);
+                
+                subordinatesListPanel.Visibility = Visibility.Visible;
+                subordinatesList.ItemsSource = subordinates;
+            }
         }
     }
 

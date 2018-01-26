@@ -103,9 +103,9 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\20180125205404_MigrationInit.cs" />
-    <Compile Include="Migrations\20180125205404_MigrationInit.designer.cs">
-      <DependentUpon>20180125205404_MigrationInit.cs</DependentUpon>
+    <Compile Include="Migrations\20180126024603_MigrationInit.cs" />
+    <Compile Include="Migrations\20180126024603_MigrationInit.designer.cs">
+      <DependentUpon>20180126024603_MigrationInit.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DataModelContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
