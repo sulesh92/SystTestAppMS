@@ -12,13 +12,6 @@
         <local:DateTimeOffsetToStringConverter x:Key="MyDateTimeOffsetConverter"/>
         <SolidColorBrush x:Key="AccentColor" Color="#0091d0"/>
 
-        <Style TargetType="Button" x:Key="ContentButtonStyle">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="HorizontalAlignment"  Value="Left"/>
-            <Setter Property="VerticalAlignment"  Value="Stretch"/>
-            <Setter Property="Margin" Value="20,0,20,0"/>
-        </Style>
-
         <Style TargetType="TextBox">
             <Setter Property="FontFamily" Value="Segoe"/>
             <Setter Property="FontSize" Value="20"/>
@@ -28,7 +21,6 @@
         <Style TargetType="TextBlock" x:Key ="gridBox">
             <Setter Property="FontFamily" Value="Segoe"/>
             <Setter Property="FontSize" Value="16"/>
-            <Setter Property="Width" Value="120"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
     </Page.Resources>
@@ -49,7 +41,12 @@
                     <StackPanel Grid.Column="0">
                         <!--Кнопки Добавить, Сохранить, Удалить, Редактировать-->
                         <StackPanel Orientation="Horizontal">
-                            <Button x:Name="addPerson_button"  Style="{StaticResource ContentButtonStyle}" Click="AddPerson_button_Click" MaxWidth="150" Margin="40,0,0,0" Background="#FF0091D0">
+                            <Button x:Name="addPerson_button" 
+                                    Foreground="White" 
+                                    Click="AddPerson_button_Click" 
+                                    MaxWidth="150" 
+                                    Margin="20,0,0,0" 
+                                    Background="#FF0091D0">
                                 <StackPanel Orientation="Horizontal" >
                                     <TextBlock  FontFamily="Segoe MDL2 Assets" FontSize="20" TextAlignment="Left" Text="&#xE710;" Margin="0,0,10,0"/>
                                     <TextBlock x:Name="addButtonTitle"   FontFamily="Segoe" FontSize="18" Text="Добавить" TextAlignment="Left" Height="22" VerticalAlignment="Top" />
@@ -57,9 +54,9 @@
                             </Button>
 
                             <Button x:Name="cancel_button"  
-                                Style="{StaticResource ContentButtonStyle}" 
+                                Foreground="White" 
                                 Click="CanselEditing_button_Click" 
-                                MaxWidth="150" Margin="40,0,0,0" 
+                                MaxWidth="150" Margin="20,0,0,0" 
                                 Background="Red" 
                                 Visibility="Collapsed">
 
@@ -70,11 +67,11 @@
                             </Button>
 
                             <Button x:Name="edit_button"  IsEnabled="False" 
-                                Style="{StaticResource ContentButtonStyle}" 
+                                Foreground="White"
                                 HorizontalAlignment="Right" 
                                 Click="Edit_button_Click" 
                                 MaxWidth="200" 
-                                Margin="40,0,0,0" 
+                                Margin="20,0,0,0" 
                                 Background="LightGray">
 
                                 <StackPanel Orientation="Horizontal" >
@@ -84,11 +81,11 @@
                             </Button>
 
                             <Button x:Name="delete_button"  IsEnabled="False" 
-                                Style="{StaticResource ContentButtonStyle}" 
+                                Foreground="White" 
                                 HorizontalAlignment="Right" 
                                 Click="Delete_button_Click" 
                                 MaxWidth="200" 
-                                Margin="40,0,0,0" 
+                                Margin="20,0,0,0" 
                                 Background="LightGray">
 
                                 <StackPanel Orientation="Horizontal" >
@@ -98,11 +95,11 @@
                             </Button>
 
                             <Button x:Name="showSubordinates_button"  IsEnabled="False" 
-                                Style="{StaticResource ContentButtonStyle}" 
+                                 
                                 HorizontalAlignment="Right" 
                                 Click="ShowSubordinates_button_Click" 
-                                MaxWidth="200" 
-                                Margin="40,0,0,0" 
+                                MaxWidth="300" 
+                                Margin="20,0,0,0" 
                                 Background="LightGray"
                                 Width="Auto"
                                 >
@@ -182,10 +179,9 @@
                                 <StackPanel Orientation="Horizontal" Margin="20">
                                     <TextBlock Text="Имя"  Width="150" FontWeight="Bold" Style="{StaticResource gridBox}" />
                                     <TextBlock Text="Группа" Width="80" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                    <TextBlock Text="Ставка" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                    <TextBlock Text="Логин" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                    <TextBlock Text="Пароль" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                    <TextBlock Text="Начальник" Width="150" FontWeight="Bold" Style="{StaticResource gridBox}" />
+                                    <TextBlock Text="Ставка" Width="80" FontWeight="Bold" Style="{StaticResource gridBox}" />
+                                    <TextBlock Text="Логин" Width="80" FontWeight="Bold" Style="{StaticResource gridBox}" />
+                                    <TextBlock Text="Пароль"  Width="80" FontWeight="Bold" Style="{StaticResource gridBox}" />                                   
                                     <TextBlock Text="Дата поступления" Width="200" FontWeight="Bold" Style="{StaticResource gridBox}" />
                                 </StackPanel>
 
@@ -193,12 +189,12 @@
                                     <ListView.ItemTemplate>
                                         <DataTemplate  x:DataType="local:Person">
                                             <StackPanel Orientation="Horizontal"  Margin="5">
-                                                <TextBlock Text="{x:Bind Name}" Width="150" Style="{StaticResource gridBox}" />
+                                                <TextBlock Text="{x:Bind Name}" Width="130" Style="{StaticResource gridBox}" />
                                                 <TextBlock Text="{x:Bind Group.Name}" Width="80" Style="{StaticResource gridBox}"/>
-                                                <TextBlock Text="{x:Bind BaseSalary}" Style="{StaticResource gridBox}"/>
-                                                <TextBlock Text="{x:Bind Login}" Style="{StaticResource gridBox}"/>
-                                                <TextBlock Text="{x:Bind Password}" Style="{StaticResource gridBox}"/>
-                                                <TextBlock Text="{x:Bind DateOfStart, Converter={StaticResource MyDateTimeOffsetConverter}}" Width="200" Style="{StaticResource gridBox}"/>
+                                                <TextBlock Text="{x:Bind BaseSalary}" Width="80" Style="{StaticResource gridBox}"/>
+                                                <TextBlock Text="{x:Bind Login}" Width="80" Style="{StaticResource gridBox}"/>
+                                                <TextBlock Text="{x:Bind Password}" Width="80" Style="{StaticResource gridBox}"/>
+                                                <TextBlock Text="{x:Bind DateOfStart,  Converter={StaticResource MyDateTimeOffsetConverter}}" Width="200" Style="{StaticResource gridBox}"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
@@ -208,7 +204,18 @@
                             <!--Отображение подчиненных-->
                             <StackPanel x:Name="subordinatesListPanel" Visibility="Collapsed" Margin="0,15,0,0">
                                 <TextBlock FontWeight="Bold">Подчиненные сотрудника</TextBlock>
-                                <ListBox x:Name="subordinatesList" Margin="0,10,0,0"> <!--ItemsSource="{x:Bind subordinates}"-->  
+                                <Button x:Name="closeSubordinatesListPanelButton" 
+                                        Click="CloseSubordinatesListPanelButton_Click" 
+                                        HorizontalAlignment="Right"
+                                        Foreground="White"
+                                        Background="Black"
+                                        Margin="0,5,0,0">
+                                    <StackPanel Orientation="Horizontal" >
+                                        <TextBlock  FontFamily="Segoe MDL2 Assets" FontSize="20" TextAlignment="Left" Text="&#xE711;" Margin="0,0,10,0"/>
+                                        <TextBlock  FontFamily="Segoe" FontSize="18" Text="Закрыть" TextAlignment="Left" Height="22" VerticalAlignment="Top" />
+                                    </StackPanel>
+                                </Button>
+                                <ListBox x:Name="subordinatesList" Margin="0,10,0,0"> 
                                     <ListBox.ItemTemplate>
                                         <DataTemplate x:DataType="local:Subordinate">
                                             <StackPanel Margin="10" Orientation="Horizontal">

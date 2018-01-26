@@ -103,6 +103,8 @@ namespace TestAppSysTech
                 newPerson = SetDataToProfile(newPerson, true);
             }
 
+            UpdateItemsListOnStaffEditPage();
+
             //Заполняем таблицу подчиненных со ссылкой на начальника
             var index = subPersonsList.SelectedItems.Count;
             if (index > 0)
@@ -117,7 +119,6 @@ namespace TestAppSysTech
 
             //Очищяем поля
             newPerson = new Person();          
-
             ChangeInterface("hidePanel");
         }
 
@@ -181,7 +182,6 @@ namespace TestAppSysTech
                 context.Groups.Attach(g);
                 context.Persons.Add(p);
                 context.SaveChanges();
-                personsList.ItemsSource = context.Persons.ToList();
             }
             return p;
         }
@@ -202,10 +202,18 @@ namespace TestAppSysTech
                     context.Groups.Attach(g);
                 }
                 context.Persons.Update(p);
-                context.SaveChanges();
-                personsList.ItemsSource = context.Persons.ToList();
+                context.SaveChanges();               
             }
             return p;
+        }
+
+        private void UpdateItemsListOnStaffEditPage()
+        {
+            using(DataModelContext context = new DataModelContext())
+            {
+                personsList.ItemsSource = context.Persons.ToList();
+                supevisersList.ItemsSource = context.Persons.ToList();
+            }
         }
 
         /// <summary>
@@ -383,6 +391,17 @@ namespace TestAppSysTech
                 subordinatesListPanel.Visibility = Visibility.Visible;
                 subordinatesList.ItemsSource = subordinates;
             }
+        }
+
+        /// <summary>
+        /// Скрывает панель со список подчиненных определенного
+        /// сотрудника
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CloseSubordinatesListPanelButton_Click(object sender, RoutedEventArgs e)
+        {
+            subordinatesListPanel.Visibility = Visibility.Collapsed;
         }
     }
 
