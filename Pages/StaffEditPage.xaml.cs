@@ -1,20 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -28,6 +19,7 @@ namespace TestAppSysTech
         List<Group> groups;
         List<Person> persons;
         List<Subordinate> subordinates;
+        Person newPerson = new Person();
 
         public StaffEditPage()
         {
@@ -55,38 +47,30 @@ namespace TestAppSysTech
 
         private void AddPerson_button_Click(object sender, RoutedEventArgs e)
         {
+            //Открывает панель добавления сотрудников
             if (addPersonPanel.Visibility == Visibility.Collapsed)
             {
                 ChangeInterface("showPanel");
                 return;
             }
 
-            //создаем группу, выбранную для сотрудника
-            Group group = groupList.SelectedItem as Group;
+            //создает группу, выбранную для сотрудника
+            
             if (groupList.SelectedItem == null)
             {
                 ShowMessageAsync("Выберите группу для сотрудника");
                 return;
-            }
-            
-            //заполняем профиль сотрудника 
-            Person p = new Person();
-
-            p.Group = group;
+            }          
 
             if (string.IsNullOrEmpty(personNameTextbox.Text))
             {
                 ShowMessageAsync("Укажите имя сотрудника");
                 return;
             }
-            else
-            {
-                p.Name = personNameTextbox.Text;
-            }
-
+            
             try
             {
-                p.BaseSalary = Convert.ToDouble(baseSalaryTextbox.Text);
+                var BaseSalary = Convert.ToDouble(baseSalaryTextbox.Text);
             }
             catch (Exception)
             {
@@ -94,19 +78,59 @@ namespace TestAppSysTech
                 return;
             }
 
+            if (!dateOfStartPicker.Date.HasValue)
+            {
+                ShowMessageAsync("Выберите дату начала работы сотрудника");
+                return;
+            }
+
+            if(newPerson == null)
+            {
+                newPerson = SetDataToProfile(newPerson, false);
+            }
+            else
+            {
+                newPerson = SetDataToProfile(newPerson, true);
+            }
+
+            //Заполняем таблицу подчиненных со ссылкой на начальника
+                  
+            if (subPersonsList.SelectedItems.Count > 0)
+            {
+                AddSubordinate();
+            }
+
+            //Очищяем поля
+            newPerson = null;          
+
+            ChangeInterface("hidePanel");
+        }
+
+        /// <summary>
+        /// Устанавливает данные из панели AddPersonPanel
+        /// -Панель ввода данных для профиля сотрудника
+        /// в поля класса Person
+        /// </summary>
+        /// <param name="p"></param>
+        public Person SetDataToProfile(Person p, bool isUpdating)
+        {
+            Group g = groupList.SelectedItem as Group;
+            p.Group = g;
+            p.Name = personNameTextbox.Text;
+            p.BaseSalary = Convert.ToDouble(baseSalaryTextbox.Text);
             TextBlock rootRight = rootComboBox.SelectedValue as TextBlock;
 
             //если пользователь не устанавливает значение, то комплиятор выдает ошибку
             try
             {
-                if (rootRight.Text == "Админ") 
+                if (rootRight.Text == "Админ")
                 {
                     p.IsRoot = true;
                 }
             }
             catch { } //Значение isRoot = false - устанавливается по умолчанию
-           
-            //определяется начальник
+
+            //добавляет начальника
             if (supevisersList.SelectedValue != null)
             {
                 p.Supervisor = supevisersList.SelectedValue.ToString();
@@ -114,61 +138,82 @@ namespace TestAppSysTech
 
             p.Login = loginTextbox.Text;
             p.Password = passwordTextbox.Text;
+            p.DateOfStart = (DateTimeOffset)dateOfStartPicker.Date;
 
-            if (dateOfStartPicker.Date.HasValue)
-            {
-                p.DateOfStart = (DateTimeOffset)dateOfStartPicker.Date;
+            switch(isUpdating){
+                case true:
+                    p = UpdateProfileInTable(p, g);
+                        break;
+                case false: p = AddProfileToTable(p, g);
+                    break;
             }
-            else
-            {
-                ShowMessageAsync("Выберите дату начала работы сотрудника");
-            }
-         
+           
+
+            return p;
+        }
+
+        /// <summary>
+        /// Метод добавляет профиль Person в БД
+        /// </summary>
+        /// <param name="p">Person p = new Person()</param>
+        /// <param name="g">Группа сотрудника</param>
+        /// <returns></returns>
+        private Person AddProfileToTable(Person p, Group g)
+        {
             //создаем контекст данных для передачи профиля сотрудника в БД
             using (DataModelContext context = new DataModelContext())
             {
-                context.Groups.Attach(group);
+                context.Groups.Attach(g);
                 context.Persons.Add(p);
                 context.SaveChanges();
                 personsList.ItemsSource = context.Persons.ToList();
             }
-
-            //persons.Add(p); 
-          
-
-            //Заполняем таблицу подчиненных со ссылкой на начальника
-            int subNumber = subPersonsList.SelectedItems.Count;
-            
-
-
-            if (subNumber > 0)
-            {
-              
-                using (DataModelContext context = new DataModelContext())
-                {
-                    for (int i = 0; i < subNumber; i++)
-                    {
-                        Subordinate subordinate = new Subordinate();
-
-                        Person selectedPerson = (Person)subPersonsList.SelectedItems[i]; //сохраняем данные о выбранном пользователе
-                        subordinate.Name = selectedPerson.Name;
-                        subordinate.Group = selectedPerson.Group.Name;
-                        subordinate.PersonId = p.Id;
-
-                        context.Persons.Attach(p);
-                        context.Subordinates.Add(subordinate);
-                        context.SaveChanges();
-                    }
-                }
-            }
-
-           
-            ChangeInterface("hidePanel");
+            return p;
         }
 
-
-        private void AddSubordinate(Person person, Subordinate subordinate)
+        /// <summary>
+        /// Метод обновляет профиль сотрудника в БД
+        /// </summary>
+        /// <param name="p">профиль сотрудника</param>
+        /// <param name="g">измененную группу</param>
+        /// <returns></returns>
+        private Person UpdateProfileInTable(Person p, Group g)
         {
+            //создаем контекст данных для передачи профиля сотрудника в БД
+            using (DataModelContext context = new DataModelContext())
+            {
+                if(p.Group != g)
+                {
+                    context.Groups.Attach(g);
+                }
+                context.Persons.Update(p);
+                context.SaveChanges();
+                personsList.ItemsSource = context.Persons.ToList();
+            }
+            return p;
+        }
+
+        /// <summary>
+        /// Сохраняет выбранных подчиненых в таблицу Subordinate
+        /// </summary>
+        private void AddSubordinate()
+        {
+            using (DataModelContext context = new DataModelContext())
+            {
+                for (int i = 0; i < subPersonsList.SelectedItems.Count; i++)
+                {
+                    Subordinate subordinate = new Subordinate();
+
+                    Person selectedPerson = (Person)subPersonsList.SelectedItems[i]; //сохраняем данные о выбранном пользователе
+                    subordinate.Name = selectedPerson.Name;
+                    subordinate.Group = selectedPerson.Group.Name;
+                    subordinate.PersonId = newPerson.Id;
+
+                    context.Persons.Attach(newPerson);
+                    context.Subordinates.Add(subordinate);
+                    context.SaveChanges();
+                }
+            }
 
         }
 
@@ -177,11 +222,6 @@ namespace TestAppSysTech
             var messageDialog = new MessageDialog(message);
             await messageDialog.ShowAsync();
 
-        }
-
-        private void CanselEditing_button_Click(object sender, RoutedEventArgs e)
-        {
-            ChangeInterface("hidePanel");
         }
 
         private void ChangeInterface(string status)
@@ -214,11 +254,14 @@ namespace TestAppSysTech
                     groupList.SelectedItem = null;
                     break;
             }
-
-
-
         }
         
+        private void CanselEditing_button_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeInterface("hidePanel");
+        }
+
+      
         /// <summary>
         /// 
         /// </summary>
@@ -226,27 +269,20 @@ namespace TestAppSysTech
         /// <param name="e"></param>
         private void Edit_button_Click(object sender, RoutedEventArgs e)
         {
-            Person person = personsList.SelectedItem as Person;
+            newPerson = personsList.SelectedItem as Person;
 
-            personNameTextbox.Text = person.Name;
-            baseSalaryTextbox.Text = person.BaseSalary.ToString();
-            rootComboBox.SelectedItem = person.IsRoot;
-            dateOfStartPicker.Date = person.DateOfStart;
-            supevisersList.SelectedValue = person.Supervisor;
-            loginTextbox.Text = person.Login;
-            passwordTextbox.Text = person.Password;
-            groupList.SelectedItem = person.Group;
-            
+            personNameTextbox.Text = newPerson.Name;
+            baseSalaryTextbox.Text = newPerson.BaseSalary.ToString();
+            rootComboBox.SelectedItem = newPerson.IsRoot;
+            dateOfStartPicker.Date = newPerson.DateOfStart;
+            supevisersList.SelectedValue = newPerson.Supervisor;
+            loginTextbox.Text = newPerson.Login;
+            passwordTextbox.Text = newPerson.Password;
+            groupList.SelectedItem = newPerson.Group;
+
+            ChangeInterface("showPanel");
         }
-
-        public void SetDataToProfile (Person p)
-        {
-             
-
-        }
-
-
-
+        
         /// <summary>
         /// Удаляет, выбранные пользователем, данные из БД
         /// </summary>
