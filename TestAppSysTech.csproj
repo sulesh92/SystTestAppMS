@@ -113,6 +113,9 @@
       <DependentUpon>StaffEditPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataModel\Subordinate.cs" />
+    <Compile Include="Pages\StaffSalaryPage.xaml.cs">
+      <DependentUpon>StaffSalaryPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -140,6 +143,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\StaffEditPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\StaffSalaryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
