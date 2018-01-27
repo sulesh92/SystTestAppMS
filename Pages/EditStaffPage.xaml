@@ -255,7 +255,6 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </StackPanel>
-
                 </Grid>
             </StackPanel>
         </ScrollViewer>

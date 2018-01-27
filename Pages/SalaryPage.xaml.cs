@@ -35,11 +35,20 @@ namespace TestAppSysTech
             persons = new ObservableCollection<Person>();
         }
 
+        /// <summary>
+        /// Загружает данные из БД в элементы на странице расчета зарплат
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SalaryPage_Loaded(object sender, RoutedEventArgs e)
         {
             using (DataModelContext context = new DataModelContext())
             {
-                List < Group > d = context.Groups.ToList();
+                List <Group> g = context.Groups.ToList();
+                groupSelectComboBox.ItemsSource = g;
+                groupSelectComboBox.DisplayMemberPath = "Name";
+                groupSelectComboBox.SelectedValue = "Id";
+
                 foreach (Person p in context.Persons)
                 {
                     persons.Add(p);
@@ -47,13 +56,32 @@ namespace TestAppSysTech
             }
         }
 
+        /// <summary>
+        /// Возвращает список с сотрудниками из
+        /// определенной группы
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GroupSelectComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            persons.Clear();
+            Group targetGroup = groupSelectComboBox.SelectedItem as Group;
+            using (DataModelContext context = new DataModelContext())
+            {
+                List<Group> g = context.Groups.ToList();
+                var _persons = context.Persons.Where(p => p.GroupId == targetGroup.Id);
+                
+                foreach (Person p in _persons)
+                {
+                    persons.Add(p);
+                }
+            }
         }
+
 
         private void CalculateButton_Click(object sender, RoutedEventArgs e)
         {
+
 
         }
     }
