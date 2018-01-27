@@ -23,6 +23,8 @@ namespace TestAppSysTech
     /// </summary>
     public sealed partial class SalaryPage : Page
     {
+        //Коллекция данных для отображения на Панели 1
+        //Список текущих сотрудников на странице Расчет Зарплат
         private ObservableCollection<Person> persons;
         
         public SalaryPage()
@@ -43,6 +45,16 @@ namespace TestAppSysTech
                     persons.Add(p);
                 }
             }
+        }
+
+        private void GroupSelectComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void CalculateButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
