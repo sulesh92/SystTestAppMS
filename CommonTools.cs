@@ -3,10 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Data;
 
 namespace TestAppSysTech
 {
+    public class CommonTools
+    {
+        public static async void ShowMessageAsync(string message)
+        {
+            var messageDialog = new MessageDialog(message);
+            await messageDialog.ShowAsync();
+        }
+
+    }
+
     /// <summary>
     /// Возвращает дату в указанном формате. Необходимо для настройки
     /// отоборажения даты на страницах из БД
@@ -25,6 +36,8 @@ namespace TestAppSysTech
             DateTimeOffset resultTime = DateTime.Parse(value.ToString());
             return resultTime;
         }
+
+       
     }
 
 

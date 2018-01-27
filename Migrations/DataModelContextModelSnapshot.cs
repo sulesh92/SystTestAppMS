@@ -95,6 +95,8 @@ namespace TestAppSysTech.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<int>("OwnPersonId");
+
                     b.Property<int>("PersonId");
 
                     b.HasKey("Id");

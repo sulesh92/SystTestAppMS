@@ -81,6 +81,7 @@ namespace TestAppSysTech.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Group = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
+                    OwnPersonId = table.Column<int>(nullable: false),
                     PersonId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

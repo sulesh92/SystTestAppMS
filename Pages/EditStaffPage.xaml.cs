@@ -79,13 +79,13 @@ namespace TestAppSysTech
 
             if (groupList.SelectedItem == null)
             {
-                ShowMessageAsync("Выберите группу для сотрудника");
+                CommonTools.ShowMessageAsync("Выберите группу для сотрудника");
                 return;
             }
 
             if (string.IsNullOrEmpty(personNameTextbox.Text))
             {
-                ShowMessageAsync("Укажите имя сотрудника");
+                CommonTools.ShowMessageAsync("Укажите имя сотрудника");
                 return;
             }
 
@@ -95,13 +95,13 @@ namespace TestAppSysTech
             }
             catch (Exception)
             {
-                ShowMessageAsync("Недопустимые символы введены в поле Ставка");
+                CommonTools.ShowMessageAsync("Недопустимые символы введены в поле Ставка");
                 return;
             }
 
             if (!dateOfStartPicker.Date.HasValue)
             {
-                ShowMessageAsync("Выберите дату начала работы сотрудника");
+                CommonTools.ShowMessageAsync("Выберите дату начала работы сотрудника");
                 return;
             }
 
@@ -242,6 +242,7 @@ namespace TestAppSysTech
                 subordinate.Group = subPerson.Group.Name;
 
                 subordinate.PersonId = superviser.Id;
+                subordinate.OwnPersonId = subPerson.Id;
                 context.Persons.Attach(superviser);
 
                 context.Subordinates.Add(subordinate);
@@ -249,12 +250,7 @@ namespace TestAppSysTech
                 context.SaveChanges();
             }
         }
-
-        private async void ShowMessageAsync(string message)
-        {
-            var messageDialog = new MessageDialog(message);
-            await messageDialog.ShowAsync();
-        }
+        
 
         /// <summary>
         /// Отображает и скрывает панель AddPersonPanel, а также 
@@ -412,6 +408,8 @@ namespace TestAppSysTech
         {
             subordinatesListPanel.Visibility = Visibility.Collapsed;
         }
+
+      
     }
 }
 

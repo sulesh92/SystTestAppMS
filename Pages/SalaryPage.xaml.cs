@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.ServiceModel.Channels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -28,7 +30,8 @@ namespace TestAppSysTech
         private ObservableCollection<Person> persons;
         private ObservableCollection<Salary> salaries;
         private List<Group> groups;
-        
+        private List<Subordinate> subordinates;
+
         public SalaryPage()
         {
             this.InitializeComponent();
@@ -51,6 +54,8 @@ namespace TestAppSysTech
                 groupSelectComboBox.DisplayMemberPath = "Name";
                 groupSelectComboBox.SelectedValue = "Id";
 
+                subordinates = context.Subordinates.ToList();
+
                 foreach (Person p in context.Persons)
                 {
                     persons.Add(p);
@@ -72,7 +77,7 @@ namespace TestAppSysTech
             {
                 //List<Group> g = context.Groups.ToList();
                 var _persons = context.Persons.Where(p => p.GroupId == targetGroup.Id);
-                
+
                 foreach (Person p in _persons)
                 {
                     persons.Add(p);
@@ -83,31 +88,74 @@ namespace TestAppSysTech
 
         private void CalculateButton_Click(object sender, RoutedEventArgs e)
         {
-
+            CreateDictionary();
 
         }
 
         private void CollectDataForCalculation()
         {
-            string calculatedMonth = datePickerOnSalaryPage.Date.Month.ToString();
-            string calculatedYear = datePickerOnSalaryPage.Date.Year.ToString();
 
-            foreach(Person p in persons)
-            {
-                
-            }
 
-            //CalculateSalary();
-            
+
         }
 
-        private void CalculateSalary(double BaseSalary, int percentage, int years, 
-                                     int coefficient, int numbeOfSubs, int limit )
+        private void CalculateSalary(double BaseSalary, int percentage, int years,
+                                     int coefficient, int numbeOfSubs, int limit)
         {
             //если меньше лимита, то возввращает расчетное значение,
             //иначе в расчете зарплаты будет учтен максимальный сумарный вклад за стаж
             int weight = percentage * years < limit ? percentage * years : limit;
             double salary = BaseSalary + percentage * years + coefficient * numbeOfSubs;
+        }
+
+        ///////////////////////////////////////МОЗГ//////////////////////////////////////////////////
+
+        Dictionary<string, Subordinate> tree = new Dictionary<string, Subordinate>();
+
+        private void CreateDictionary()
+        {
+            Person person = currentStaffList.SelectedItem as Person; //сотрудник для, которого необходимо посчитать зарплату
+            int numberOfStaff = persons.Last().Id + 1; // список persons формируется сразу после загрузки страницы
+            CreateTree(person, numberOfStaff);
+        }
+
+        private void CreateTree(Person chosenPerson, int numberOfStaff)
+        {
+            /*bool[] isPersonChecked = new bool[numberOfStaff];*/ //хранит список сотрудников, которые уже были просмотрены
+            Queue<Person> turn = new Queue<Person>(); //хранит сотрудников, которые подлежат проверке 
+            turn.Enqueue(chosenPerson); //первый в очереди сотрудник для проверки
+            isPersonChecked[chosenPerson.Id] = true; //отмечаем сотрудника проверенным 
+
+            while (turn.Count != 0)
+            {
+                Person person = turn.Dequeue();
+                
+                using (DataModelContext context = new DataModelContext())
+                {
+                    List<Subordinate> tempSubList = context.Subordinates.ToList();
+
+                    if (person.Subordinates.Count() > 0)
+                    {
+                        for (int i = 0; i < person.Subordinates.Count; i++)
+                        {
+                            var index = string.Format("{0}.{1}", person.Id, i);
+                            List<Subordinate> subs = person.Subordinates.ToList();
+                            tree.Add(index, subs[i]);
+
+                           
+                            //поиск подчиненного в Таблице сотрудников
+                            //подчиненный заносится в список как следующий _person для проверки
+                            //на наличии своих подчиненных. 
+                            Person nextPerson = context.Persons.Find(subs[i].OwnPersonId);
+                            /*isPersonChecked[nextPerson.Id] = true;*/ //отмечает следующего сотрудника проверенным
+                            turn.Enqueue(nextPerson);              //добавляет сотрудника в очередь
+                        }
+                    }
+                }
+            }
+
+            CommonTools.ShowMessageAsync(tree.Count.ToString());
+           
         }
 
     }
