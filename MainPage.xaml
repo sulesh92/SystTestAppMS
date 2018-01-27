@@ -71,13 +71,13 @@
                     <ListBoxItem x:Name="StaffEditPageButton">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Style="{StaticResource SplitMenuIcon}" Text="&#xE8F1;"/>
-                            <TextBlock Style="{StaticResource SplitMenuText}" Text="История"/>
+                            <TextBlock Style="{StaticResource SplitMenuText}" Text="Персонал"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem x:Name="MyChannelsPageButton">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Style="{StaticResource SplitMenuIcon}" Text="&#xF0B2;"/>
-                            <TextBlock Style="{StaticResource SplitMenuText}" Text="Мои каналы"/>
+                            <TextBlock Style="{StaticResource SplitMenuText}" Text="Группы"/>
                         </StackPanel>
                     </ListBoxItem>
                 </ListBox>

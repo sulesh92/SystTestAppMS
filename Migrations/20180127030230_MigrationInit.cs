@@ -14,7 +14,10 @@ namespace TestAppSysTech.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true)
+                    Limit = table.Column<double>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    SubNumberCoeff = table.Column<double>(nullable: false),
+                    YearsCoefficient = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {

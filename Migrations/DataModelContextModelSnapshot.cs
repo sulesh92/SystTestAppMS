@@ -20,7 +20,13 @@ namespace TestAppSysTech.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<double>("Limit");
+
                     b.Property<string>("Name");
+
+                    b.Property<double>("SubNumberCoeff");
+
+                    b.Property<double>("YearsCoefficient");
 
                     b.HasKey("Id");
 

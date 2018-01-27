@@ -395,10 +395,6 @@ namespace TestAppSysTech
 
             using (DataModelContext context = new DataModelContext())
             {
-                //var subordinates = from s in context.Subordinates
-                //                   where s.PersonId.Equals(p.Id)
-                //                   select s;
-
                 var subordinates = context.Subordinates.Where(s => s.PersonId == p.Id);
 
                 subordinatesListPanel.Visibility = Visibility.Visible;

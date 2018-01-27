@@ -51,7 +51,11 @@
                       PlaceholderText="Группа"
                       Margin="5" SelectionChanged="GroupSelectComboBox_SelectionChanged"/>
 
-                <DatePicker DayVisible="False" Margin="10,5,5,5" HorizontalAlignment="Stretch"/>
+                <DatePicker x:Name="datePickerOnSalaryPage" 
+                            DayVisible="False" 
+                            Margin="10,5,5,5" 
+                            HorizontalAlignment="Stretch"
+                            />
 
                 <Button Margin="10,5,5,5" Click="CalculateButton_Click">
                     <TextBlock Text="Рассчитать" Height="20" Margin="0,-0.4,0,0" VerticalAlignment="Top"/>

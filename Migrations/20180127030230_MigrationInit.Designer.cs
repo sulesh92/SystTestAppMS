@@ -8,7 +8,7 @@ using TestAppSysTech;
 namespace TestAppSysTech.Migrations
 {
     [DbContext(typeof(DataModelContext))]
-    [Migration("20180126024603_MigrationInit")]
+    [Migration("20180127030230_MigrationInit")]
     partial class MigrationInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,7 +21,13 @@ namespace TestAppSysTech.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<double>("Limit");
+
                     b.Property<string>("Name");
+
+                    b.Property<double>("SubNumberCoeff");
+
+                    b.Property<double>("YearsCoefficient");
 
                     b.HasKey("Id");
 

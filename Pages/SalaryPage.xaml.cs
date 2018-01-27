@@ -26,6 +26,8 @@ namespace TestAppSysTech
         //Коллекция данных для отображения на Панели 1
         //Список текущих сотрудников на странице Расчет Зарплат
         private ObservableCollection<Person> persons;
+        private ObservableCollection<Salary> salaries;
+        private List<Group> groups;
         
         public SalaryPage()
         {
@@ -44,8 +46,8 @@ namespace TestAppSysTech
         {
             using (DataModelContext context = new DataModelContext())
             {
-                List <Group> g = context.Groups.ToList();
-                groupSelectComboBox.ItemsSource = g;
+                groups = context.Groups.ToList();
+                groupSelectComboBox.ItemsSource = groups;
                 groupSelectComboBox.DisplayMemberPath = "Name";
                 groupSelectComboBox.SelectedValue = "Id";
 
@@ -68,7 +70,7 @@ namespace TestAppSysTech
             Group targetGroup = groupSelectComboBox.SelectedItem as Group;
             using (DataModelContext context = new DataModelContext())
             {
-                List<Group> g = context.Groups.ToList();
+                //List<Group> g = context.Groups.ToList();
                 var _persons = context.Persons.Where(p => p.GroupId == targetGroup.Id);
                 
                 foreach (Person p in _persons)
@@ -84,5 +86,29 @@ namespace TestAppSysTech
 
 
         }
+
+        private void CollectDataForCalculation()
+        {
+            string calculatedMonth = datePickerOnSalaryPage.Date.Month.ToString();
+            string calculatedYear = datePickerOnSalaryPage.Date.Year.ToString();
+
+            foreach(Person p in persons)
+            {
+                
+            }
+
+            //CalculateSalary();
+            
+        }
+
+        private void CalculateSalary(double BaseSalary, int percentage, int years, 
+                                     int coefficient, int numbeOfSubs, int limit )
+        {
+            //если меньше лимита, то возввращает расчетное значение,
+            //иначе в расчете зарплаты будет учтен максимальный сумарный вклад за стаж
+            int weight = percentage * years < limit ? percentage * years : limit;
+            double salary = BaseSalary + percentage * years + coefficient * numbeOfSubs;
+        }
+
     }
 }

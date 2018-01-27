@@ -1,4 +1,5 @@
-﻿using Windows.UI.Core;
+﻿using System.Linq;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -24,6 +25,8 @@ namespace TestAppSysTech
             //скрываем кнопку назад
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
             SystemNavigationManager.GetForCurrentView().BackRequested += AppBackRequested;
+
+            Loaded += CheckGroupsInDb; //проверяем наличие записей о группах в БД
         }
 
         /// <summary>
@@ -47,7 +50,7 @@ namespace TestAppSysTech
                 MainPageListBox.SelectedIndex = index;// Выбираем кнопку в меню соотвествующую названию текущей страницы
 
                 //При переходе назад  MainPageListBox создает событие SelectionChanged, которое также необходимо обработать. 
-                frame.GoBack();    
+                //frame.GoBack();    
                 e.Handled = true;  //необходимо сообщить о том, что событие возврат назад было обработано 
                                    // MainPageListBox.SelectionChanged 
             }
@@ -58,7 +61,29 @@ namespace TestAppSysTech
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed; //кнопка назад скрыта
             }
         }
+        /// <summary>
+        /// Проверяет БД на наличие записей о группах, 
+        /// если таковых нет вообще, то метод добавляет
+        /// указанные в ТЗ
+        /// </summary>
+        private void CheckGroupsInDb(object sender, RoutedEventArgs e)
+        {
+            using(DataModelContext context =new DataModelContext())
+            {
+                System.Collections.Generic.List<Group> groups = context.Groups.ToList();
+                if (groups.Count() == 0)
+                {
+                    Group g1 = new Group { Name = "Manager", SubNumberCoeff = 0.005D, YearsCoefficient = 0.05D, Limit = 0.4D };
+                    Group g2 = new Group { Name = "Salesman", SubNumberCoeff = 0.003D, YearsCoefficient = 0.01D,Limit=0.35D };
+                    Group g3 = new Group { Name = "Employee", SubNumberCoeff = 0D, YearsCoefficient = 0.03D, Limit=0.3D };
+                    context.Groups.Add(g1);
+                    context.Groups.Add(g2);
+                    context.Groups.Add(g3);
+                    context.SaveChanges();
+                }
+            }
 
+        }
 
         /// <summary>
         /// Обработчик кнопки бокового меню. 

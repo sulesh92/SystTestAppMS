@@ -100,17 +100,17 @@
     <Compile Include="DataModel\Group.cs" />
     <Compile Include="DataModel\Person.cs" />
     <Compile Include="DataModel\Salary.cs" />
+    <Compile Include="Migrations\20180127030230_MigrationInit.cs" />
+    <Compile Include="Migrations\20180127030230_MigrationInit.designer.cs">
+      <DependentUpon>20180127030230_MigrationInit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\DataModelContextModelSnapshot.cs" />
     <Compile Include="Pages\EditStaffPage.xaml.cs">
       <DependentUpon>EditStaffPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\20180126024603_MigrationInit.cs" />
-    <Compile Include="Migrations\20180126024603_MigrationInit.designer.cs">
-      <DependentUpon>20180126024603_MigrationInit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\DataModelContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataModel\Subordinate.cs" />
     <Compile Include="Pages\SalaryPage.xaml.cs">

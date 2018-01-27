@@ -10,6 +10,9 @@ namespace TestAppSysTech
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public double YearsCoefficient { get; set; }
+        public double SubNumberCoeff { get; set; }
+        public double Limit { get; set; }
 
         public ICollection<Person> Persons { get; set; }
 
