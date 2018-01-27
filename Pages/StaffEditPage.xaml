@@ -30,7 +30,10 @@
         <ScrollViewer VerticalScrollBarVisibility="Auto"
               HorizontalScrollBarVisibility="Auto">
             <StackPanel>
-                <TextBlock Text="Управление сотрудниками" Foreground="#0091d0" Margin="20" Style="{ThemeResource HeaderTextBlockStyle}"/>
+                <TextBlock Text="Управление сотрудниками" 
+                           Foreground="#0091d0" 
+                           Margin="20" 
+                           Style="{ThemeResource HeaderTextBlockStyle}"/>
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -48,8 +51,18 @@
                                     Margin="20,0,0,0" 
                                     Background="#FF0091D0">
                                 <StackPanel Orientation="Horizontal" >
-                                    <TextBlock  FontFamily="Segoe MDL2 Assets" FontSize="20" TextAlignment="Left" Text="&#xE710;" Margin="0,0,10,0"/>
-                                    <TextBlock x:Name="addButtonTitle"   FontFamily="Segoe" FontSize="18" Text="Добавить" TextAlignment="Left" Height="22" VerticalAlignment="Top" />
+                                    <TextBlock  FontFamily="Segoe MDL2 Assets" 
+                                                FontSize="20" 
+                                                TextAlignment="Left" 
+                                                Text="&#xE710;" 
+                                                Margin="0,0,10,0"/>
+                                    <TextBlock x:Name="addButtonTitle"   
+                                               FontFamily="Segoe" 
+                                               FontSize="18" 
+                                               Text="Добавить" 
+                                               TextAlignment="Left" 
+                                               Height="22" 
+                                               VerticalAlignment="Top" />
                                 </StackPanel>
                             </Button>
 
@@ -126,7 +139,6 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-
                                 <StackPanel Grid.Column="0" Orientation="Vertical">
                                     <TextBlock Grid.Column="0">Имя сотрудника</TextBlock>
                                     <TextBox x:Name="personNameTextbox" Margin="0,10,20,20"></TextBox>
@@ -177,12 +189,12 @@
                             <StackPanel >
 
                                 <StackPanel Orientation="Horizontal" Margin="20">
-                                    <TextBlock Text="Имя"  Width="150" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                    <TextBlock Text="Группа" Width="80" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                    <TextBlock Text="Ставка" Width="80" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                    <TextBlock Text="Логин" Width="80" FontWeight="Bold" Style="{StaticResource gridBox}" />
-                                    <TextBlock Text="Пароль"  Width="80" FontWeight="Bold" Style="{StaticResource gridBox}" />                                   
-                                    <TextBlock Text="Дата поступления" Width="200" FontWeight="Bold" Style="{StaticResource gridBox}" />
+                                    <TextBlock Text="Имя"  Width="150" FontWeight="Bold" />
+                                    <TextBlock Text="Группа" Width="80" FontWeight="Bold"  />
+                                    <TextBlock Text="Ставка" Width="80" FontWeight="Bold"/>
+                                    <TextBlock Text="Логин" Width="80" FontWeight="Bold"/>
+                                    <TextBlock Text="Пароль"  Width="80" FontWeight="Bold"/>                                   
+                                    <TextBlock Text="Дата поступления" Width="200" FontWeight="Bold" />
                                 </StackPanel>
 
                                 <ListView x:Name="personsList"  SelectionMode="Multiple" SelectionChanged="personsList_SelectionChanged">
