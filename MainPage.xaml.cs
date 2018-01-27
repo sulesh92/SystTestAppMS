@@ -80,7 +80,7 @@ namespace TestAppSysTech
             }
             if (StaffEditPageButton.IsSelected)
             {
-                CurrentContentFrame.Navigate(typeof(StaffEditPage));
+                CurrentContentFrame.Navigate(typeof(EditStaffPage));
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible; //кнопка назад доступна
             }
         }

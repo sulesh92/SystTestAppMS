@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="TestAppSysTech.StaffEditPage"
+    x:Class="TestAppSysTech.EditStaffPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:TestAppSysTech"
@@ -193,7 +193,7 @@
                                     <TextBlock Text="Группа" Width="80" FontWeight="Bold"  />
                                     <TextBlock Text="Ставка" Width="80" FontWeight="Bold"/>
                                     <TextBlock Text="Логин" Width="80" FontWeight="Bold"/>
-                                    <TextBlock Text="Пароль"  Width="80" FontWeight="Bold"/>                                   
+                                    <TextBlock Text="Пароль"  Width="80" FontWeight="Bold"/>
                                     <TextBlock Text="Дата поступления" Width="200" FontWeight="Bold" />
                                 </StackPanel>
 
@@ -212,7 +212,7 @@
                                     </ListView.ItemTemplate>
                                 </ListView>
                             </StackPanel>
-                            
+
                             <!--Отображение подчиненных-->
                             <StackPanel x:Name="subordinatesListPanel" Visibility="Collapsed" Margin="0,15,0,0">
                                 <TextBlock FontWeight="Bold">Подчиненные сотрудника</TextBlock>
@@ -227,7 +227,7 @@
                                         <TextBlock  FontFamily="Segoe" FontSize="18" Text="Закрыть" TextAlignment="Left" Height="22" VerticalAlignment="Top" />
                                     </StackPanel>
                                 </Button>
-                                <ListBox x:Name="subordinatesList" Margin="0,10,0,0"> 
+                                <ListBox x:Name="subordinatesList" Margin="0,10,0,0">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate x:DataType="local:Subordinate">
                                             <StackPanel Margin="10" Orientation="Horizontal">

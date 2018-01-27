@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -14,16 +22,18 @@ namespace TestAppSysTech
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
-    public sealed partial class StaffEditPage : Page
+    public sealed partial class EditStaffPage : Page
     {
+
         List<Group> groups;
         List<Person> persons;
         Person newPerson = new Person();
 
-        public StaffEditPage()
+        public EditStaffPage()
         {
             this.InitializeComponent();
-            this.Loaded += StaffEditPage_Loaded;
+
+            Loaded += EditStaffPage_Loaded;
 
             using (DataModelContext context = new DataModelContext())
             {
@@ -32,13 +42,14 @@ namespace TestAppSysTech
             }
         }
 
+
         /// <summary>
         /// Устанавливает ресурсы ListView 
         /// для отображения информации
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void StaffEditPage_Loaded(object sender, RoutedEventArgs e)
+        private void EditStaffPage_Loaded(object sender, RoutedEventArgs e)
         {
             personsList.ItemsSource = persons;
 
@@ -65,19 +76,19 @@ namespace TestAppSysTech
             }
 
             //создает группу, выбранную для сотрудника
-            
+
             if (groupList.SelectedItem == null)
             {
                 ShowMessageAsync("Выберите группу для сотрудника");
                 return;
-            }          
+            }
 
             if (string.IsNullOrEmpty(personNameTextbox.Text))
             {
                 ShowMessageAsync("Укажите имя сотрудника");
                 return;
             }
-            
+
             try
             {
                 var BaseSalary = Convert.ToDouble(baseSalaryTextbox.Text);
@@ -94,7 +105,7 @@ namespace TestAppSysTech
                 return;
             }
 
-            if(newPerson.Name == null)
+            if (newPerson.Name == null)
             {
                 newPerson = SetDataToProfile(newPerson, false);
             }
@@ -109,16 +120,16 @@ namespace TestAppSysTech
             var index = subPersonsList.SelectedItems.Count;
             if (index > 0)
             {
-                for(int i = 0; i < index; i++)
+                for (int i = 0; i < index; i++)
                 {
                     Person selectedPerson = (Person)subPersonsList.SelectedItems[i]; //сохраняем данные о выбранном пользователе
                     AddSubordinate(selectedPerson, newPerson);
                 }
-                 
+
             }
 
             //Очищяем поля
-            newPerson = new Person();          
+            newPerson = new Person();
             ChangeInterface("hidePanel");
         }
 
@@ -157,11 +168,13 @@ namespace TestAppSysTech
             p.Password = passwordTextbox.Text;
             p.DateOfStart = (DateTimeOffset)dateOfStartPicker.Date;
 
-            switch(isUpdating){
+            switch (isUpdating)
+            {
                 case true:
                     p = UpdateProfileInTable(p, g);
-                        break;
-                case false: p = AddProfileToTable(p, g);
+                    break;
+                case false:
+                    p = AddProfileToTable(p, g);
                     break;
             }
 
@@ -197,19 +210,19 @@ namespace TestAppSysTech
             //создаем контекст данных для передачи профиля сотрудника в БД
             using (DataModelContext context = new DataModelContext())
             {
-                if(p.Group != g)
+                if (p.Group != g)
                 {
                     context.Groups.Attach(g);
                 }
                 context.Persons.Update(p);
-                context.SaveChanges();               
+                context.SaveChanges();
             }
             return p;
         }
 
         private void UpdateItemsListOnStaffEditPage()
         {
-            using(DataModelContext context = new DataModelContext())
+            using (DataModelContext context = new DataModelContext())
             {
                 personsList.ItemsSource = context.Persons.ToList();
                 supevisersList.ItemsSource = context.Persons.ToList();
@@ -223,17 +236,17 @@ namespace TestAppSysTech
         {
             using (DataModelContext context = new DataModelContext())
             {
-                    Subordinate subordinate = new Subordinate();
+                Subordinate subordinate = new Subordinate();
 
-                    subordinate.Name = subPerson.Name;
-                    subordinate.Group = subPerson.Group.Name;
+                subordinate.Name = subPerson.Name;
+                subordinate.Group = subPerson.Group.Name;
 
-                    subordinate.PersonId = superviser.Id;
-                    context.Persons.Attach(superviser);
+                subordinate.PersonId = superviser.Id;
+                context.Persons.Attach(superviser);
 
-                    context.Subordinates.Add(subordinate);
+                context.Subordinates.Add(subordinate);
 
-                    context.SaveChanges();
+                context.SaveChanges();
             }
         }
 
@@ -283,7 +296,7 @@ namespace TestAppSysTech
                     break;
             }
         }
-        
+
         /// <summary>
         /// Вызывает ChangeInterface, для отмены редактирования
         /// </summary>
@@ -313,7 +326,7 @@ namespace TestAppSysTech
 
             ChangeInterface("showPanel");
         }
-        
+
         /// <summary>
         /// Удаляет, выбранные пользователем, данные из БД
         /// </summary>
@@ -321,7 +334,7 @@ namespace TestAppSysTech
         /// <param name="e"></param>
         private void Delete_button_Click(object sender, RoutedEventArgs e)
         {
-           using (DataModelContext context = new DataModelContext())
+            using (DataModelContext context = new DataModelContext())
             {
                 for (int i = 0; i < personsList.SelectedItems.Count; i++)
                 {
@@ -353,7 +366,7 @@ namespace TestAppSysTech
                 showSubordinates_button.IsEnabled = false;
                 return;
             }
-            if(selectedItemsNumber == 1)
+            if (selectedItemsNumber == 1)
             {
                 delete_button.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
                 delete_button.IsEnabled = true;
@@ -373,13 +386,13 @@ namespace TestAppSysTech
                 showSubordinates_button.IsEnabled = false;
                 return;
             }
-            
+
         }
 
         private void ShowSubordinates_button_Click(object sender, RoutedEventArgs e)
         {
             Person p = personsList.SelectedItem as Person;
-               
+
             using (DataModelContext context = new DataModelContext())
             {
                 //var subordinates = from s in context.Subordinates
@@ -387,7 +400,7 @@ namespace TestAppSysTech
                 //                   select s;
 
                 var subordinates = context.Subordinates.Where(s => s.PersonId == p.Id);
-                
+
                 subordinatesListPanel.Visibility = Visibility.Visible;
                 subordinatesList.ItemsSource = subordinates;
             }
@@ -404,6 +417,5 @@ namespace TestAppSysTech
             subordinatesListPanel.Visibility = Visibility.Collapsed;
         }
     }
-
-
 }
+
