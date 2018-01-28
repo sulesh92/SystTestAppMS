@@ -116,6 +116,7 @@
     <Compile Include="Pages\SalaryPage.xaml.cs">
       <DependentUpon>SalaryPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SalaryCalculators.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

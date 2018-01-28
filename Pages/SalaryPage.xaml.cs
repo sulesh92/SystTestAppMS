@@ -56,6 +56,11 @@ namespace TestAppSysTech
 
                 subordinates = context.Subordinates.ToList();
 
+                foreach(Salary s in context.Salaries)
+                {
+                    salaries.Add(s);
+                }
+               
                 foreach (Person p in context.Persons)
                 {
                     persons.Add(p);
@@ -92,25 +97,13 @@ namespace TestAppSysTech
 
         }
 
-        private void CollectDataForCalculation()
-        {
 
 
-
-        }
-
-        private void CalculateSalary(double BaseSalary, int percentage, int years,
-                                     int coefficient, int numbeOfSubs, int limit)
-        {
-            //если меньше лимита, то возввращает расчетное значение,
-            //иначе в расчете зарплаты будет учтен максимальный сумарный вклад за стаж
-            int weight = percentage * years < limit ? percentage * years : limit;
-            double salary = BaseSalary + percentage * years + coefficient * numbeOfSubs;
-        }
 
         ///////////////////////////////////////МОЗГ//////////////////////////////////////////////////
 
-        Dictionary<string, Subordinate> tree = new Dictionary<string, Subordinate>();
+        //Dictionary<string, Subordinate> tree = new Dictionary<string, Subordinate>();
+        List<int> tree = new List<int>();
 
         private void CreateDictionary()
         {
@@ -121,10 +114,9 @@ namespace TestAppSysTech
 
         private void CreateTree(Person chosenPerson, int numberOfStaff)
         {
-            /*bool[] isPersonChecked = new bool[numberOfStaff];*/ //хранит список сотрудников, которые уже были просмотрены
             Queue<Person> turn = new Queue<Person>(); //хранит сотрудников, которые подлежат проверке 
             turn.Enqueue(chosenPerson); //первый в очереди сотрудник для проверки
-            isPersonChecked[chosenPerson.Id] = true; //отмечаем сотрудника проверенным 
+            
 
             while (turn.Count != 0)
             {
@@ -140,23 +132,81 @@ namespace TestAppSysTech
                         {
                             var index = string.Format("{0}.{1}", person.Id, i);
                             List<Subordinate> subs = person.Subordinates.ToList();
-                            tree.Add(index, subs[i]);
+                            //tree.Add(index, subs[i]); занимает много лишней памяти,
+                            //экономней сохранять OwnPersonId подчиненного, который
+                            //является его Id в таблице сотрудников
 
-                           
+                            tree.Add(subs[i].OwnPersonId);
+                                                       
                             //поиск подчиненного в Таблице сотрудников
                             //подчиненный заносится в список как следующий _person для проверки
                             //на наличии своих подчиненных. 
                             Person nextPerson = context.Persons.Find(subs[i].OwnPersonId);
-                            /*isPersonChecked[nextPerson.Id] = true;*/ //отмечает следующего сотрудника проверенным
                             turn.Enqueue(nextPerson);              //добавляет сотрудника в очередь
                         }
                     }
                 }
             }
-
-            CommonTools.ShowMessageAsync(tree.Count.ToString());
-           
         }
 
+        private void CalculateSalary(Person lastPerson,int numberOfStaff)
+        {
+            bool[] isPersonSalaryCalculated = new bool[numberOfStaff];
+            Queue<Person> turn = new Queue<Person>();
+            turn.Enqueue(lastPerson);
+           
+            double subsWeightTotal = 0D;
+
+            while (turn.Count != 0)
+            {
+                Person p = turn.Dequeue();
+
+                using (DataModelContext context = new DataModelContext())
+                {
+                    List<Subordinate> tempSubList = context.Subordinates.ToList();
+                    List<Salary> salaries = context.Salaries.ToList();
+
+                    //Осуществляется переход на уровень ниже, если у текущего сотрудника, 
+                    //есть не просчитанные подчиненные
+                    if (p.Subordinates.Count > 0)
+                    {       
+                        foreach(Subordinate s in p.Subordinates)
+                        {   
+                            //Каждый подчиненный записывается в очередь, как сотрудник
+                            if(isPersonSalaryCalculated[s.OwnPersonId] == false)
+                            {
+                                turn.Enqueue(context.Persons.Find(s.OwnPersonId));
+                            }
+                        }
+                        
+                        //Начальник добавляется последним в очередь
+                        turn.Enqueue(p);
+                        continue;
+                    }
+
+                    //Иначе расчитывается зарплата текущего сотрудника и осуществляется
+                    //переход на уровень выше
+                    else
+                    {
+                        DateTimeOffset accountingDate = datePickerOnSalaryPage.Date;
+
+                        //Возвращает зарплату текущего сотрудника
+                        SalaryCalculators.CalculatePersonSalary(p, accountingDate, subsWeightTotal);
+
+                        isPersonSalaryCalculated[p.Id] = true;
+                        //Переход на уровень выше
+                        /*  context.Subordinates.Find("OwnPersonId", p.Id);*/ //если у человека есть два начальника,  
+                                                                              //то тут возникнет ошибка
+
+                        List<Subordinate> subs = context.Subordinates.Where(s => s.OwnPersonId == p.Id).ToList();
+                        turn.Enqueue(subs[0].Person);
+
+                    }
+                }
+                
+            }
+        }
+
+       
     }
 }
