@@ -58,7 +58,6 @@ namespace TestAppSysTech.Migrations
                     CurrentSalary = table.Column<double>(nullable: false),
                     Group = table.Column<string>(nullable: true),
                     Month = table.Column<string>(nullable: true),
-                    NumberOfSubordinates = table.Column<int>(nullable: false),
                     PersonId = table.Column<int>(nullable: false),
                     Year = table.Column<string>(nullable: true)
                 },

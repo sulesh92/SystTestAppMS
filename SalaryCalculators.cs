@@ -62,13 +62,14 @@ namespace TestAppSysTech
 
             using (DataModelContext context = new DataModelContext())
             {
+                List<Salary> salaries = context.Salaries.ToList();
+
                 foreach (Subordinate subordinate in p.Subordinates)
                 {
                     Person _person = context.Persons.Find(subordinate.OwnPersonId);
-                    Salary personSalary = _person.SalaryHistory.Where(s => s.Month == accountingMonth 
-                                                                           && s.Year == accountingYear) 
-                                                                           as Salary;
-                    weight += personSalary.CurrentSalary;
+                    List<Salary> _personSalary = _person.SalaryHistory.Where(s => s.Month == accountingMonth && s.Year == accountingYear).ToList();
+
+                    weight += _personSalary[0].CurrentSalary;
                 }
             }
 
@@ -81,8 +82,8 @@ namespace TestAppSysTech
         {
             //если меньше лимита, то возввращает расчетное значение,
             //иначе в расчете зарплаты будет учтен максимальный сумарный вклад за стаж
-            double loyaltyWeight = yearsCoefficient * years < limit ? yearsCoefficient * years : limit;
-            double salary = baseSalary + loyaltyWeight + subsCoefficient * subsWeight;
+            double loyaltyWeight = yearsCoefficient * years <= limit ? yearsCoefficient * years : limit;
+            double salary = baseSalary + baseSalary*loyaltyWeight + subsCoefficient * subsWeight;
             return salary;
         }
 
@@ -93,7 +94,8 @@ namespace TestAppSysTech
                 Salary s = new Salary { Month = month,
                                         Year = year,
                                         Group = p.Group.Name,
-                                        CurrentSalary = salary};
+                                        CurrentSalary = salary,
+                                        Person = p};
                 context.Persons.Attach(p);
                 context.Salaries.Add(s);
                 context.SaveChanges();

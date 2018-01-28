@@ -100,9 +100,11 @@
     <Compile Include="DataModel\Group.cs" />
     <Compile Include="DataModel\Person.cs" />
     <Compile Include="DataModel\Salary.cs" />
-    <Compile Include="Migrations\20180127202608_MigrationInit.cs" />
-    <Compile Include="Migrations\20180127202608_MigrationInit.designer.cs">
-      <DependentUpon>20180127202608_MigrationInit.cs</DependentUpon>
+    <Compile Include="ExampleClass.cs" />
+    <Compile Include="FirstSolution.cs" />
+    <Compile Include="Migrations\20180128143942_MigrationInit.cs" />
+    <Compile Include="Migrations\20180128143942_MigrationInit.designer.cs">
+      <DependentUpon>20180128143942_MigrationInit.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DataModelContextModelSnapshot.cs" />
     <Compile Include="Pages\EditStaffPage.xaml.cs">
@@ -117,6 +119,7 @@
       <DependentUpon>SalaryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="SalaryCalculators.cs" />
+    <Compile Include="SecondSolution.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

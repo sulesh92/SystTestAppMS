@@ -16,6 +16,23 @@ namespace TestAppSysTech
             await messageDialog.ShowAsync();
         }
 
+
+        public static Person FindPersonById(int personId)
+        {
+            Person requestdPerson = new Person();
+
+            using (DataModelContext context = new DataModelContext())
+            {
+                List<Group> groups = context.Groups.ToList();
+                List<Subordinate> subordinates = context.Subordinates.ToList();
+                List<Salary> salaries = context.Salaries.ToList();
+
+                requestdPerson = context.Persons.Find(personId);
+            }
+
+            return requestdPerson;
+        }
+
     }
 
     /// <summary>
@@ -37,8 +54,10 @@ namespace TestAppSysTech
             return resultTime;
         }
 
-       
+
     }
+
+
 
 
 }

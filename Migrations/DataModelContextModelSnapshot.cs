@@ -73,8 +73,6 @@ namespace TestAppSysTech.Migrations
 
                     b.Property<string>("Month");
 
-                    b.Property<int>("NumberOfSubordinates");
-
                     b.Property<int>("PersonId");
 
                     b.Property<string>("Year");

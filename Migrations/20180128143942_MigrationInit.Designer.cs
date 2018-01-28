@@ -8,7 +8,7 @@ using TestAppSysTech;
 namespace TestAppSysTech.Migrations
 {
     [DbContext(typeof(DataModelContext))]
-    [Migration("20180127202608_MigrationInit")]
+    [Migration("20180128143942_MigrationInit")]
     partial class MigrationInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,8 +73,6 @@ namespace TestAppSysTech.Migrations
                     b.Property<string>("Group");
 
                     b.Property<string>("Month");
-
-                    b.Property<int>("NumberOfSubordinates");
 
                     b.Property<int>("PersonId");
 

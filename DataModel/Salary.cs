@@ -11,7 +11,6 @@ namespace TestAppSysTech
         public int Id { get; set; }
         public string Month { get; set; }
         public string Year { get; set; }
-        public int NumberOfSubordinates { get; set; }
         public string Group { get; set; }
         public double CurrentSalary { get; set; }
 

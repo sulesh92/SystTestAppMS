@@ -68,11 +68,15 @@ namespace TestAppSysTech
         /// </summary>
         private void CheckGroupsInDb(object sender, RoutedEventArgs e)
         {
+            bool isEmpty = false;
+
             using(DataModelContext context =new DataModelContext())
             {
                 System.Collections.Generic.List<Group> groups = context.Groups.ToList();
                 if (groups.Count() == 0)
                 {
+                    isEmpty = true;
+
                     Group g1 = new Group { Name = "Manager", SubNumberCoeff = 0.005D, YearsCoefficient = 0.05D, Limit = 0.4D };
                     Group g2 = new Group { Name = "Salesman", SubNumberCoeff = 0.003D, YearsCoefficient = 0.01D,Limit=0.35D };
                     Group g3 = new Group { Name = "Employee", SubNumberCoeff = 0D, YearsCoefficient = 0.03D, Limit=0.3D };
@@ -83,6 +87,11 @@ namespace TestAppSysTech
                 }
             }
 
+            if(isEmpty == true)
+            {
+                ExampleClass Test = new ExampleClass();
+                Test.AddTestPersons();
+            }
         }
 
         /// <summary>
