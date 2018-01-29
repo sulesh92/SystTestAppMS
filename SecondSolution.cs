@@ -14,37 +14,45 @@ namespace TestAppSysTech
 
         public static void StartCalculations(Person targetPerson, int numberOfStaff, DateTimeOffset accountingDate)
         {
+            List<int> mainTree = new List<int>(targetPerson.Id);
+
             //Хранит id сотрудника из группы Salesman и 
             //его зарплату в сумме с зп подчиненных. 
             salaryWeightDictionary = new Dictionary<int, double>();
 
-            List<int> mainTree = new List<int>() { targetPerson.Id};
+            //if(targetPerson.Group.Name != "Salesman")
+            //{
+                mainTree.Add(targetPerson.Id);
+            //}        
+
+            bool[] isPersonSalaryCalculated = new bool[numberOfStaff];
 
             //Создает первичное "древо" из набора сотрудников группы Salesman
             //Возвращает сотрудника с последнего нижнего уровня
-            Person lastPerson = CreateTree(targetPerson);
+            Person lastPerson = CreateTree(targetPerson, isPersonSalaryCalculated);
 
-            foreach (int Id in tree)
+            foreach(int ind in tree)
             {
-                mainTree.Add(Id);
+                mainTree.Add(ind);
             }
-           
-            bool[] isPersonSalaryCalculated = new bool[numberOfStaff];
-
+            
             for (int i = mainTree.Count() - 1; i >= 0; i--)
             {
                 targetPerson = CommonTools.FindPersonById(mainTree[i]);
-                lastPerson = CreateTree(targetPerson);
-                double subSalaryWeight = CalculateSalary(lastPerson, targetPerson, accountingDate, isPersonSalaryCalculated);
+                lastPerson = CreateTree(targetPerson, isPersonSalaryCalculated);
+                double subSalaryWeight = CalculateSalary(lastPerson, targetPerson, accountingDate, 
+                                                         isPersonSalaryCalculated);
                 salaryWeightDictionary.Add(targetPerson.Id, subSalaryWeight);
             }
 
             salaryWeightDictionary.Clear();
+            
 
         }
 
-        public static Person CreateTree(Person targetPerson)
+        public static Person CreateTree(Person targetPerson, bool[] isPersonSalaryCalculated)
         {
+
             tree = new List<int>();
 
             Queue<Person> turn = new Queue<Person>(); //хранит сотрудников, которые подлежат проверке 
@@ -65,21 +73,26 @@ namespace TestAppSysTech
                     {
                         for (int i = 0; i < currentPerson.Subordinates.Count; i++)
                         {
-                            var index = string.Format("{0}.{1}", currentPerson.Id, i);
+                           
                             List<Subordinate> subs = currentPerson.Subordinates.ToList();
-                            //tree.Add(index, subs[i]); занимает много лишней памяти,
-                            //экономней сохранять OwnPersonId подчиненного, который
-                            //является его Id в таблице сотрудников
+
                             if (subs[i].Group == "Salesman")
                             {
                                 tree.Add(subs[i].OwnPersonId);
                             }
 
-                            //поиск подчиненного в Таблице сотрудников
-                            //подчиненный заносится в список как следующий _person для проверки
-                            //на наличии своих подчиненных. 
-                            Person nextPerson = context.Persons.Find(subs[i].OwnPersonId);
-                            turn.Enqueue(nextPerson);              //добавляет сотрудника в очередь
+                            //Если зарплата для сотрудника НЕ посчитана, тогда
+                            //он добавляется следующим узлом в дерево, иначе его 
+                            //ветвь прерывается
+                            if (!isPersonSalaryCalculated[subs[i].OwnPersonId])
+                            {
+                                //поиск подчиненного в Таблице сотрудников по его OwnPersonId
+                                //подчиненный заносится в список как следующий сотрудник для проверки
+                                //на наличии своих подчиненных. 
+                                Person nextPerson = context.Persons.Find(subs[i].OwnPersonId);
+                                turn.Enqueue(nextPerson);              //добавляет сотрудника в очередь
+                            }
+                            
                         }
                     }
                 }
@@ -104,6 +117,9 @@ namespace TestAppSysTech
             {
                 using (DataModelContext context = new DataModelContext())
                 {
+                    int o = 0;
+                    o++;
+
                     List<Subordinate> tempSubList = context.Subordinates.ToList();
                     List<Salary> salaries = context.Salaries.ToList();
                     List<Group> groups = context.Groups.ToList();
