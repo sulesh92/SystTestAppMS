@@ -8,8 +8,11 @@ namespace TestAppSysTech
 {
     class SecondSolution
     {
-        public static List<int> tree; //Дерево хранит в себе targetPerson - сотрудников из группы Salesman
+        //Дерево хранит в себе targetPerson - сотрудников из группы Salesman
+        public static List<int> tree; 
 
+        //Сумма зарплат во фрагменте иерархии с одним
+        //Salesman
         public class SalesmanMoneyBag
         {
             public double SalesmanSalaryBag { get; set; }
@@ -22,7 +25,9 @@ namespace TestAppSysTech
 
             }
         }
-
+        //Хранит данные о вышестояших Salesman, которые обратились к нижестоящему
+        //за информацией о сумме зарплат. Нужна для того, чтобы избежать повторного 
+        //вклада суммы одноги из salesman в общую корзину
         public static Dictionary<int, SalesmanMoneyBag> salaryWeightDictionary;
 
         

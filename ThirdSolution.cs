@@ -12,6 +12,32 @@ namespace TestAppSysTech
         List<Person> persons;
         List<Subordinate> subordinates;
 
+        //Дерево хранит в себе targetPerson - сотрудников из группы Salesman
+        //Ключевы узлы
+        public static List<int> tree; 
+
+        //Сумма зарплат во фрагменте иерархии с одним
+        //Salesman
+        public class SalesmanMoneyBag
+        {
+            public double SalesmanSalaryBag { get; set; }
+            public List<int> TakenById { get; set; }
+
+            public SalesmanMoneyBag(double salaryBag, List<int> takenById)
+            {
+                SalesmanSalaryBag = salaryBag;
+                TakenById = takenById;
+
+            }
+        }
+
+        //Хранит данные о вышестояших Salesman, которые обратились к нижестоящему
+        //за информацией о сумме зарплат. Нужна для того, чтобы избежать повторного 
+        //вклада суммы одноги из salesman в общую корзину
+        public static Dictionary<int, SalesmanMoneyBag> salaryWeightDictionary;
+
+
+
         /// <summary>
         /// Метод расчитывает зарплаты всех сотрудников группы
         /// EMployee
@@ -33,6 +59,6 @@ namespace TestAppSysTech
             }
         }
 
-
+        
     }
 }
