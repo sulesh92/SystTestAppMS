@@ -28,7 +28,7 @@ namespace TestAppSysTech
         //Коллекция данных для отображения на Панели 1
         //Список текущих сотрудников на странице Расчет Зарплат
         private ObservableCollection<Person> persons;
-        private List<Salary> salaries;
+        private ObservableCollection<Salary> salaries;
         private List<Group> groups;
         private List<Subordinate> subordinates;
 
@@ -38,7 +38,7 @@ namespace TestAppSysTech
 
             this.Loaded += SalaryPage_Loaded;
             persons = new ObservableCollection<Person>();
-            salaries = new List<Salary>();
+            salaries = new ObservableCollection<Salary>();
         }
 
         /// <summary>
@@ -56,8 +56,7 @@ namespace TestAppSysTech
                 groupSelectComboBox.DisplayMemberPath = "Name";
                 groupSelectComboBox.SelectedValue = "Id";
 
-               
-
+                
                 foreach (Person p in context.Persons)
                 {
                     persons.Add(p);
@@ -69,8 +68,6 @@ namespace TestAppSysTech
                 {
                     salaries.Add(s);
                 }
-               
-
             }
         }
 
@@ -86,7 +83,7 @@ namespace TestAppSysTech
             Group targetGroup = groupSelectComboBox.SelectedItem as Group;
             using (DataModelContext context = new DataModelContext())
             {
-                //List<Group> g = context.Groups.ToList();
+                
                 var _persons = context.Persons.Where(p => p.GroupId == targetGroup.Id);
 
                 foreach (Person p in _persons)
@@ -96,23 +93,14 @@ namespace TestAppSysTech
             }
         }
 
-
         private void CalculateButton_Click(object sender, RoutedEventArgs e)
         {
-            
+
             Person targetPerson = currentStaffList.SelectedItem as Person; //сотрудник для, которого необходимо посчитать зарплату
             int numberOfStaff = persons.Last().Id + 1; // список persons формируется сразу после загрузки страницы
             DateTimeOffset accountingDate = datePickerOnSalaryPage.Date;
 
             SecondSolution.StartCalculations(targetPerson, numberOfStaff, accountingDate);
-
-            //List<int> tree = FirstSolution.CreateTree(targetPerson, numberOfStaff);
-            //Person lastPerson = CommonTools.FindPersonById(tree.Last());
-
-
-            //double salary = FirstSolution.CalculateSalary(lastPerson, targetPerson, numberOfStaff, accountingDate);
-
-            //CommonTools.ShowMessageAsync("Зарплата " + targetPerson.Name + "равна " + salary.ToString());
         }
 
         private void CurrentStaffList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -132,13 +120,13 @@ namespace TestAppSysTech
             List<Subordinate> subs = new List<Subordinate>();
             using (DataModelContext context = new DataModelContext())
             {
-                 groups = context.Groups.ToList();
-                 employies = context.Persons.Where(p => p.Group.Name == "Employee").ToList();
-                 subs = context.Subordinates.ToList();
+                groups = context.Groups.ToList();
+                employies = context.Persons.Where(p => p.Group.Name == "Employee").ToList();
+                subs = context.Subordinates.ToList();
             }
 
-           
-                ThirdSolution.StartCalculationsForAllPersons(accountingDate, numberOfStaff, employies[0]);
-        }        
+
+            ThirdSolution.StartCalculationsForAllPersons(accountingDate, numberOfStaff, employies[0]);
+        }
     }
 }

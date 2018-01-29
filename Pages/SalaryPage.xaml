@@ -29,17 +29,19 @@
         </Grid.RowDefinitions>
 
         <!--Шапка страницы (Header) с кнопками управления-->
-        <StackPanel Grid.Row="0">
-            <!--Заголовок страницы-->
-            <TextBlock     Text="Зарплата сотрудников" 
+        <StackPanel Grid.Row="0"
+                    Orientation="Vertical">
+            <StackPanel >
+                <!--Заголовок страницы-->
+                <TextBlock     Text="Зарплата сотрудников" 
                            Foreground="#0091d0" 
                            Margin="20" 
                            Style="{ThemeResource HeaderTextBlockStyle}">
 
-            </TextBlock>
+                </TextBlock>
 
-            <!--Кнопки управления-->
-            <StackPanel x:Name="buttonsPanelOnSalaryPage"
+                <!--Кнопки управления-->
+                <StackPanel x:Name="buttonsPanelOnSalaryPage"
                     Grid.Row="1"
                     Orientation="Horizontal"
                     HorizontalAlignment="Left"
@@ -47,30 +49,37 @@
                     BorderThickness="10"
                     BorderBrush="{StaticResource AccentColor}">
 
-                <ComboBox x:Name="groupSelectComboBox" 
+                    <ComboBox x:Name="groupSelectComboBox" 
                       PlaceholderText="Группа"
                       Margin="5" SelectionChanged="GroupSelectComboBox_SelectionChanged"/>
 
-                <DatePicker x:Name="datePickerOnSalaryPage" 
+                    <DatePicker x:Name="datePickerOnSalaryPage" 
                             DayVisible="False" 
                             Margin="10,5,5,5" 
                             HorizontalAlignment="Stretch"
                             />
 
-                <Button Margin="10,5,5,5" Click="CalculateButton_Click">
-                    <TextBlock Text="Рассчитать" Height="20" Margin="0,-0.4,0,0" VerticalAlignment="Top"/>
-                </Button>
+                    <Button Margin="10,5,5,5" Click="CalculateButton_Click">
+                        <TextBlock Text="Рассчитать" Height="20" Margin="0,-0.4,0,0" VerticalAlignment="Top"/>
+                    </Button>
 
-                <Button Margin="10,5,5,5" Click="CalculateAllButton_Click">
-                    <TextBlock Text="Рассчитать всех" Height="20" Margin="0,-0.4,0,0" VerticalAlignment="Top"/>
-                </Button>
+                    <Button Margin="10,5,5,5" Click="CalculateAllButton_Click">
+                        <TextBlock Text="Рассчитать всех" Height="20" Margin="0,-0.4,0,0" VerticalAlignment="Top"/>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="40,0,293.6,0" Text="Выберите сотрудника для расчета з/п" Height="19"/>
+                <TextBlock Margin="20.4,0,261.4,0" Text="Данные по з/п" Height="22"/>
+                <TextBlock  Width="600" Margin="20, 0, 20, 0" Text="Зарплата выбранного сотрудника" RenderTransformOrigin="0.493,0.554"></TextBlock>
+
             </StackPanel>
         </StackPanel>
-
         <!--Панель отображения данных разделена на три части-->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
@@ -91,11 +100,9 @@
                             <DataTemplate  x:DataType="local:Person">
                                 <StackPanel Orientation="Horizontal"  Margin="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                                     <TextBlock Text="{x:Bind Name}" 
-                                               Width="150"
+                                               Width="60"
                                            Style="{StaticResource StandartTextBlock}"/>
                                     <TextBlock Text="{x:Bind Group.Name}" 
-                                           Style="{StaticResource StandartTextBlock}"/>
-                                    <TextBlock Text="{x:Bind Subordinates.Count}" 
                                            Style="{StaticResource StandartTextBlock}"/>
                                     <TextBlock Text="{x:Bind BaseSalary}" 
                                            Style="{StaticResource StandartTextBlock}"/>
@@ -110,30 +117,48 @@
 
 
             <!--Панель 2 отображает информацию обо всех сотрудниках-->
-            <!--
+
             <ScrollViewer Grid.Column="1"
+                          Margin="10"
+                          MaxWidth="1000"
                           HorizontalScrollBarVisibility="Auto"
-                          VerticalScrollBarVisibility="Auto">
-                <ListView x:Name="staffCurrentSalaryInfoList"  
-                          SelectionMode="Single">
-                    <ListView.ItemTemplate>
-                        <DataTemplate  x:DataType="local:Salary">
-                            <StackPanel Orientation="Horizontal"  Margin="5">
-                                <TextBlock Text="{x:Bind Person.Name}"  Style="{StaticResource gridBox}" />
-                                <TextBlock Text="{x:Bind Group}" Style="{StaticResource gridBox}"/>
-                                <TextBlock Text="{x:Bind Person.DateOfStart, Converter={StaticResource MyDateTimeOffsetConverter}}" Width="80" Style="{StaticResource gridBox}"/>
-                                <TextBlock Text="{x:Bind NumberOfSubordinates}"  Style="{StaticResource gridBox}"/>
-                                <TextBlock Text="{x:Bind Month}" Style="{StaticResource gridBox}"/>
-                                <TextBlock Text="{x:Bind Year}" Style="{StaticResource gridBox}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </ScrollViewer>-->
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalAlignment="Left">
+                <StackPanel VerticalAlignment="Stretch">
+                    <ListView x:Name="salaryViewPanel"  
+                          SelectionMode="Single"
+                          ItemsSource="{x:Bind salaries}"
+                          SelectedValue="Id" >
+                        <ListView.ItemTemplate>
+                            <DataTemplate  x:DataType="local:Salary">
+                                <StackPanel Orientation="Horizontal"  Margin="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                    <TextBlock Text="{x:Bind Person.Name}" 
+                                               Width="60"
+                                           Style="{StaticResource StandartTextBlock}"/>
+                                    <TextBlock Text="{x:Bind CurrentSalary}" 
+                                           Style="{StaticResource StandartTextBlock}"/>
+                                    <TextBlock Text="{x:Bind Group}" 
+                                           Style="{StaticResource StandartTextBlock}"/>
+                                    <TextBlock Text="{x:Bind Month}" 
+                                           Style="{StaticResource StandartTextBlock}"/>
+                                    <TextBlock Text="{x:Bind Year}" 
+                                           Style="{StaticResource StandartTextBlock}"/>
+
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+            </ScrollViewer>
+
+
+
+
+
 
             <!--Панель 3 отображает информацию об определенном сотруднике-->
             <ScrollViewer x:Name="certainStaffScrollViewer" 
-                          Grid.Column="1"
+                          Grid.Column="2"
                           MaxWidth="400"
                           HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto"

@@ -34,16 +34,20 @@ namespace TestAppSysTech
 
         public static void StartCalculations(Person targetPerson, int numberOfStaff, DateTimeOffset accountingDate)
         {
-            List<int> mainTree = new List<int>(targetPerson.Id);
+            List<int> mainTree = new List<int>();
+            try
+            {
+                 mainTree.Add(targetPerson.Id);
+            }
+            catch
+            {
+                CommonTools.ShowMessageAsync("Сначала выберите сотрудника из списка слева");
+                return;
+            }
 
             //Хранит id сотрудника из группы Salesman и 
             //его зарплату в сумме с зп подчиненных. 
             salaryWeightDictionary = new Dictionary<int, SalesmanMoneyBag>();
-
-            //if(targetPerson.Group.Name != "Salesman")
-            //{
-                mainTree.Add(targetPerson.Id);
-            //}        
 
             bool[] isPersonSalaryCalculated = new bool[numberOfStaff];
 
