@@ -10,7 +10,22 @@ namespace TestAppSysTech
     {
         public static List<int> tree; //Дерево хранит в себе targetPerson - сотрудников из группы Salesman
 
-        public static Dictionary<int, double> salaryWeightDictionary;
+        public class SalesmanMoneyBag
+        {
+            public double SalesmanSalaryBag { get; set; }
+            public List<int> TakenById { get; set; }
+
+            public SalesmanMoneyBag(double salaryBag, List<int> takenById)
+            {
+                SalesmanSalaryBag = salaryBag;
+                TakenById = takenById;
+
+            }
+        }
+
+        public static Dictionary<int, SalesmanMoneyBag> salaryWeightDictionary;
+
+        
 
         public static void StartCalculations(Person targetPerson, int numberOfStaff, DateTimeOffset accountingDate)
         {
@@ -18,7 +33,7 @@ namespace TestAppSysTech
 
             //Хранит id сотрудника из группы Salesman и 
             //его зарплату в сумме с зп подчиненных. 
-            salaryWeightDictionary = new Dictionary<int, double>();
+            salaryWeightDictionary = new Dictionary<int, SalesmanMoneyBag>();
 
             //if(targetPerson.Group.Name != "Salesman")
             //{
@@ -42,7 +57,9 @@ namespace TestAppSysTech
                 lastPerson = CreateTree(targetPerson, isPersonSalaryCalculated);
                 double subSalaryWeight = CalculateSalary(lastPerson, targetPerson, accountingDate, 
                                                          isPersonSalaryCalculated);
-                salaryWeightDictionary.Add(targetPerson.Id, subSalaryWeight);
+                SalesmanMoneyBag subsBag = new SalesmanMoneyBag(subSalaryWeight, new List<int>());
+ 
+                salaryWeightDictionary.Add(targetPerson.Id, subsBag);
             }
 
             salaryWeightDictionary.Clear();
@@ -147,10 +164,17 @@ namespace TestAppSysTech
                             //сотрудника из группы Salesman
                             if (s.Group == "Salesman")
                             {
-                                double _salaryWeight;
-                                salaryWeightDictionary.TryGetValue(s.OwnPersonId, out _salaryWeight);
+                                salaryWeightDictionary.TryGetValue(s.OwnPersonId, out SalesmanMoneyBag _salaryWeight);
 
-                                subsWeightTotal += _salaryWeight;
+                                //Если текущий начальник в первый раз прибавляет
+                                //сумму подчиненного Salesman-a, тогда сумма будет
+                                //записана в общий котел.
+                                if (!_salaryWeight.TakenById.Contains(s.PersonId))
+                                {
+                                    subsWeightTotal += _salaryWeight.SalesmanSalaryBag;
+                                    _salaryWeight.TakenById.Add(s.PersonId);
+                                    salaryWeightDictionary[s.OwnPersonId] = new SalesmanMoneyBag(s.OwnPersonId, _salaryWeight.TakenById);
+                                }
                             }
                         }
 

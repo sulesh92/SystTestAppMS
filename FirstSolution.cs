@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+///РЕШЕНИЕ ЗАДАЧИ НАХОДИТСЯ В ФАЙЛЕ SecondSolution!!!!
+
 namespace TestAppSysTech
 {
     class FirstSolution
