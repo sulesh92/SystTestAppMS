@@ -102,13 +102,15 @@ namespace TestAppSysTech
             int numberOfStaff = persons.Last().Id + 1; // список persons формируется сразу после загрузки страницы
             DateTimeOffset accountingDate = datePickerOnSalaryPage.Date;
 
-            List<int> tree = FirstSolution.CreateTree(targetPerson, numberOfStaff);
-            Person lastPerson = CommonTools.FindPersonById(tree.Last());
+            SecondSolution.StartCalculations(targetPerson, numberOfStaff, accountingDate);
+
+            //List<int> tree = FirstSolution.CreateTree(targetPerson, numberOfStaff);
+            //Person lastPerson = CommonTools.FindPersonById(tree.Last());
 
 
-            double salary = FirstSolution.CalculateSalary(lastPerson, targetPerson, numberOfStaff, accountingDate);
+            //double salary = FirstSolution.CalculateSalary(lastPerson, targetPerson, numberOfStaff, accountingDate);
 
-            CommonTools.ShowMessageAsync("Зарплата " + targetPerson.Name + "равна " + salary.ToString());
+            //CommonTools.ShowMessageAsync("Зарплата " + targetPerson.Name + "равна " + salary.ToString());
         }
         
         /////////////////////////////////////////МОЗГ//////////////////////////////////////////////////

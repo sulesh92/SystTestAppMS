@@ -8,34 +8,72 @@ namespace TestAppSysTech
 {
     class SecondSolution
     {
-        public static List<int> CreateTree(Person chosenPerson, int numberOfStaff)
+        public static List<int> tree; //Дерево хранит в себе targetPerson - сотрудников из группы Salesman
+
+        public static Dictionary<int, double> salaryWeightDictionary;
+
+        public static void StartCalculations(Person targetPerson, int numberOfStaff, DateTimeOffset accountingDate)
         {
-            List<int> tree = new List<int>();
+            //Хранит id сотрудника из группы Salesman и 
+            //его зарплату в сумме с зп подчиненных. 
+            salaryWeightDictionary = new Dictionary<int, double>();
+
+            List<int> mainTree = new List<int>() { targetPerson.Id};
+
+            //Создает первичное "древо" из набора сотрудников группы Salesman
+            //Возвращает сотрудника с последнего нижнего уровня
+            Person lastPerson = CreateTree(targetPerson);
+
+            foreach (int Id in tree)
+            {
+                mainTree.Add(Id);
+            }
+           
+            bool[] isPersonSalaryCalculated = new bool[numberOfStaff];
+
+            for (int i = mainTree.Count() - 1; i >= 0; i--)
+            {
+                targetPerson = CommonTools.FindPersonById(mainTree[i]);
+                lastPerson = CreateTree(targetPerson);
+                double subSalaryWeight = CalculateSalary(lastPerson, targetPerson, accountingDate, isPersonSalaryCalculated);
+                salaryWeightDictionary.Add(targetPerson.Id, subSalaryWeight);
+            }
+
+            salaryWeightDictionary.Clear();
+
+        }
+
+        public static Person CreateTree(Person targetPerson)
+        {
+            tree = new List<int>();
 
             Queue<Person> turn = new Queue<Person>(); //хранит сотрудников, которые подлежат проверке 
-            turn.Enqueue(chosenPerson); //первый в очереди сотрудник для проверки
+            turn.Enqueue(targetPerson); //первый в очереди сотрудник для проверки
 
+            Person currentPerson = new Person();
 
             while (turn.Count != 0)
             {
-                Person person = turn.Dequeue();
+                currentPerson = turn.Dequeue();
 
                 using (DataModelContext context = new DataModelContext())
                 {
                     List<Group> groups = context.Groups.ToList();
                     List<Subordinate> tempSubList = context.Subordinates.ToList();
 
-                    if (person.Subordinates.Count() > 0)
+                    if (currentPerson.Subordinates.Count() > 0)
                     {
-                        for (int i = 0; i < person.Subordinates.Count; i++)
+                        for (int i = 0; i < currentPerson.Subordinates.Count; i++)
                         {
-                            var index = string.Format("{0}.{1}", person.Id, i);
-                            List<Subordinate> subs = person.Subordinates.ToList();
+                            var index = string.Format("{0}.{1}", currentPerson.Id, i);
+                            List<Subordinate> subs = currentPerson.Subordinates.ToList();
                             //tree.Add(index, subs[i]); занимает много лишней памяти,
                             //экономней сохранять OwnPersonId подчиненного, который
                             //является его Id в таблице сотрудников
-
-                            tree.Add(subs[i].OwnPersonId);
+                            if (subs[i].Group == "Salesman")
+                            {
+                                tree.Add(subs[i].OwnPersonId);
+                            }
 
                             //поиск подчиненного в Таблице сотрудников
                             //подчиненный заносится в список как следующий _person для проверки
@@ -47,22 +85,22 @@ namespace TestAppSysTech
                 }
             }
 
-            return tree;
+            return currentPerson;
         }
 
-        public static double CalculateSalary(Person lastPerson, Person targerPerson, int numberOfStaff,
-                                       DateTimeOffset accountingDate)
+
+        public static double CalculateSalary(Person lastPerson, Person targetPerson,
+                                       DateTimeOffset accountingDate, bool [] isPersonSalaryCalculated)
         {
-            bool[] isPersonSalaryCalculated = new bool[numberOfStaff];
-            //Stack<Person> stack = new Stack<Person>();
-            //stack.Push(lastPerson);
+            
+
             Queue<Person> turn = new Queue<Person>(); //хранит сотрудников, которые подлежат проверке 
             turn.Enqueue(lastPerson); //первый в очереди сотрудник для проверки
 
             double subsWeightTotal = 0D;
             double salary = 0D;
 
-            while (isPersonSalaryCalculated[targerPerson.Id] == false)
+            while (isPersonSalaryCalculated[targetPerson.Id] == false)
             {
                 using (DataModelContext context = new DataModelContext())
                 {
@@ -70,6 +108,7 @@ namespace TestAppSysTech
                     List<Salary> salaries = context.Salaries.ToList();
                     List<Group> groups = context.Groups.ToList();
 
+                    //Текущий сотрудник, для которого выполняется расчет зарплаты
                     Person p = context.Persons.Find(turn.Dequeue().Id);
 
                     //Осуществляется переход на уровень ниже, если у текущего сотрудника, 
@@ -77,6 +116,7 @@ namespace TestAppSysTech
                     if (p.Subordinates.Count > 0)
                     {
                         int i = 0; //количество подчиненных с нерасчитанными зарплатами
+
                         foreach (Subordinate s in p.Subordinates)
                         {
                             //Каждый подчиненный записывается в очередь, как сотрудник
@@ -85,7 +125,19 @@ namespace TestAppSysTech
                                 i++;
                                 turn.Enqueue(context.Persons.Find(s.OwnPersonId));
                             }
+
+                            //Если среди подчиненных оказывается Salesman, тогда
+                            //из словаря достается сумма всех зарпалат подченных 
+                            //сотрудника из группы Salesman
+                            if (s.Group == "Salesman")
+                            {
+                                double _salaryWeight;
+                                salaryWeightDictionary.TryGetValue(s.OwnPersonId, out _salaryWeight);
+
+                                subsWeightTotal += _salaryWeight;
+                            }
                         }
+
                         if (i != 0)
                         {
                             continue;
@@ -95,10 +147,9 @@ namespace TestAppSysTech
                     //Иначе расчитывается зарплата текущего сотрудника и осуществляется
                     //переход на уровень выше
 
-
-
                     //Возвращает зарплату текущего сотрудника
                     salary = SalaryCalculators.CalculatePersonSalary(p, accountingDate, subsWeightTotal);
+                    subsWeightTotal += salary;
 
                     isPersonSalaryCalculated[p.Id] = true;
                     //Переход на уровень выше. Для этого текущего сотрудника находим в таблице подчиненных, поскольку 
@@ -127,7 +178,7 @@ namespace TestAppSysTech
                     }
                 }
             }
-            return salary;
+            return subsWeightTotal;
         }
     }
 }

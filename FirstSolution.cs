@@ -16,10 +16,11 @@ namespace TestAppSysTech
             Queue<Person> turn = new Queue<Person>(); //хранит сотрудников, которые подлежат проверке 
             turn.Enqueue(chosenPerson); //первый в очереди сотрудник для проверки
 
+            Person person = new Person();
 
             while (turn.Count != 0)
             {
-                Person person = turn.Dequeue();
+                person = turn.Dequeue();
 
                 using (DataModelContext context = new DataModelContext())
                 {
