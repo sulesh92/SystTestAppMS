@@ -6,7 +6,6 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,17 +21,15 @@ namespace TestAppSysTech
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
-    public sealed partial class EditStaffPage : Page
+    public sealed partial class GroupEditPage : Page
     {
-
         List<Group> groups;
         List<Person> persons;
         Person newPerson = new Person();
 
-        public EditStaffPage()
+        public GroupEditPage()
         {
             this.InitializeComponent();
-
             Loaded += EditStaffPage_Loaded;
 
             using (DataModelContext context = new DataModelContext())
@@ -40,9 +37,10 @@ namespace TestAppSysTech
                 groups = context.Groups.ToList();
                 persons = context.Persons.ToList();
             }
+
         }
 
-
+   
         /// <summary>
         /// Устанавливает ресурсы ListView 
         /// для отображения информации
@@ -250,7 +248,7 @@ namespace TestAppSysTech
                 context.SaveChanges();
             }
         }
-        
+
 
         /// <summary>
         /// Отображает и скрывает панель AddPersonPanel, а также 
@@ -409,7 +407,5 @@ namespace TestAppSysTech
             subordinatesListPanel.Visibility = Visibility.Collapsed;
         }
 
-      
     }
 }
-

@@ -8,6 +8,13 @@ namespace TestAppSysTech
 {
     class SalaryCalculators
     {
+        /// <summary>
+        /// Возвращает зарплату сотрудника
+        /// </summary>
+        /// <param name="p">сотрудник</param>
+        /// <param name="accountingDate">Расчетная дата</param>
+        /// <param name="subsWeightTotal">Зарплата всех подчиненных</param>
+        /// <returns></returns>
         public static Double CalculatePersonSalary(Person p, DateTimeOffset accountingDate, double subsWeightTotal)
         {
                       
@@ -91,6 +98,14 @@ namespace TestAppSysTech
         {
             using (DataModelContext context = new DataModelContext())
             {
+                var sal = p.SalaryHistory.Where(sHistory => sHistory.Month == month 
+                                                && sHistory.Year == year);
+                //удаляет записи от предыдущих решений
+                foreach(Salary _sal in sal)
+                {
+                    context.Salaries.Remove(_sal);
+                } 
+
                 Salary s = new Salary { Month = month,
                                         Year = year,
                                         Group = p.Group.Name,

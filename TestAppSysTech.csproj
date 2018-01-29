@@ -95,21 +95,24 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CommonTools.cs" />
+    <Compile Include="Classes\CommonTools.cs" />
     <Compile Include="DataModel\DataModel.cs" />
     <Compile Include="DataModel\Group.cs" />
     <Compile Include="DataModel\Person.cs" />
     <Compile Include="DataModel\Salary.cs" />
-    <Compile Include="ExampleClass.cs" />
-    <Compile Include="FirstSolution.cs" />
+    <Compile Include="Classes\ExampleClass.cs" />
+    <Compile Include="Classes\FirstSolution.cs" />
+    <Compile Include="Pages\LogIn.xaml.cs">
+      <DependentUpon>LogIn.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GroupEditPage.xaml.cs">
+      <DependentUpon>GroupEditPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\20180128143942_MigrationInit.cs" />
     <Compile Include="Migrations\20180128143942_MigrationInit.designer.cs">
       <DependentUpon>20180128143942_MigrationInit.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DataModelContextModelSnapshot.cs" />
-    <Compile Include="Pages\EditStaffPage.xaml.cs">
-      <DependentUpon>EditStaffPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -118,8 +121,9 @@
     <Compile Include="Pages\SalaryPage.xaml.cs">
       <DependentUpon>SalaryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SalaryCalculators.cs" />
-    <Compile Include="SecondSolution.cs" />
+    <Compile Include="Classes\SalaryCalculators.cs" />
+    <Compile Include="Classes\SecondSolution.cs" />
+    <Compile Include="ThirdSolution.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -142,7 +146,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Pages\EditStaffPage.xaml">
+    <Page Include="Pages\LogIn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\GroupEditPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

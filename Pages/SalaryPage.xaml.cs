@@ -28,7 +28,7 @@ namespace TestAppSysTech
         //Коллекция данных для отображения на Панели 1
         //Список текущих сотрудников на странице Расчет Зарплат
         private ObservableCollection<Person> persons;
-        private ObservableCollection<Salary> salaries;
+        private List<Salary> salaries;
         private List<Group> groups;
         private List<Subordinate> subordinates;
 
@@ -38,7 +38,7 @@ namespace TestAppSysTech
 
             this.Loaded += SalaryPage_Loaded;
             persons = new ObservableCollection<Person>();
-            salaries = new ObservableCollection<Salary>();
+            salaries = new List<Salary>();
         }
 
         /// <summary>
@@ -56,12 +56,14 @@ namespace TestAppSysTech
                 groupSelectComboBox.DisplayMemberPath = "Name";
                 groupSelectComboBox.SelectedValue = "Id";
 
-                subordinates = context.Subordinates.ToList();
+               
 
                 foreach (Person p in context.Persons)
                 {
                     persons.Add(p);
                 }
+
+                subordinates = context.Subordinates.ToList();
 
                 foreach (Salary s in context.Salaries)
                 {
@@ -112,23 +114,32 @@ namespace TestAppSysTech
 
             //CommonTools.ShowMessageAsync("Зарплата " + targetPerson.Name + "равна " + salary.ToString());
         }
-        
+
+        private void CurrentStaffList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            certainStaffScrollViewer.Visibility = Visibility.Visible;
+            var d = currentStaffList.SelectedItem as Person;
+            certainStaffList.ItemsSource = salaries.Where(s => s.PersonId == d.Id);
+        }
+
+
+
         /////////////////////////////////////////МОЗГ//////////////////////////////////////////////////
 
         ////Dictionary<string, Subordinate> tree = new Dictionary<string, Subordinate>();
-        
+
         //private List<int> CreateTree(Person chosenPerson, int numberOfStaff)
         //{
         //    List<int> tree = new List<int>();
 
         //    Queue<Person> turn = new Queue<Person>(); //хранит сотрудников, которые подлежат проверке 
         //    turn.Enqueue(chosenPerson); //первый в очереди сотрудник для проверки
-            
+
 
         //    while (turn.Count != 0)
         //    {
         //        Person person = turn.Dequeue();
-                
+
         //        using (DataModelContext context = new DataModelContext())
         //        {
         //            List<Group> groups = context.Groups.ToList();
@@ -145,7 +156,7 @@ namespace TestAppSysTech
         //                    //является его Id в таблице сотрудников
 
         //                    tree.Add(subs[i].OwnPersonId);
-                                                       
+
         //                    //поиск подчиненного в Таблице сотрудников
         //                    //подчиненный заносится в список как следующий _person для проверки
         //                    //на наличии своих подчиненных. 
@@ -202,7 +213,7 @@ namespace TestAppSysTech
 
         //            //Иначе расчитывается зарплата текущего сотрудника и осуществляется
         //            //переход на уровень выше
-                   
+
         //                DateTimeOffset accountingDate = datePickerOnSalaryPage.Date;
 
         //                //Возвращает зарплату текущего сотрудника
@@ -211,7 +222,7 @@ namespace TestAppSysTech
         //                isPersonSalaryCalculated[p.Id] = true;
         //                //Переход на уровень выше. Для этого текущего сотрудника находим в таблице подчиненных, поскольку 
         //                //в классе Subperson хранится ссылка на начальника. После чего начальник добавляется в список Stack, 
-                        
+
         //                /*  context.Subordinates.Find("OwnPersonId", p.Id);*/ //если у человека есть два начальника,  
         //                                                                      //то тут возникнет ошибка, поэтому 
         //                                                                      //сохраняем результат в список подчиненных
@@ -230,6 +241,6 @@ namespace TestAppSysTech
         //    return salary;
         //}
 
-       
+
     }
 }

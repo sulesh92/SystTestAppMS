@@ -8,11 +8,11 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <SolidColorBrush x:Key="AccentColor" Color="#0091d0"/>
+        <SolidColorBrush x:Key="EasyPostingAccentColor" Color="#0091d0"/>
 
         <Style TargetType="ListBox" x:Key="SplitMenuListBox">
 
-            <Setter Property="Background" Value="{StaticResource AccentColor}"/>
+            <Setter Property="Background" Value="{StaticResource EasyPostingAccentColor}"/>
         </Style>
 
         <Style TargetType="TextBlock" x:Key="SplitMenuIcon">
@@ -62,22 +62,16 @@
                          SelectionChanged="MainPageListBox_Click" 
                          SelectedIndex="0"
                          Style="{StaticResource SplitMenuListBox}">
-                    <ListBoxItem x:Name="StaffSalaryPageButton">
+                    <ListBoxItem x:Name="SalaryPageButton">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Style="{StaticResource SplitMenuIcon}" Text="&#xE80F;"/>
                             <TextBlock Style="{StaticResource SplitMenuText}" Text="Главная"/>
                         </StackPanel>
                     </ListBoxItem>
-                    <ListBoxItem x:Name="StaffEditPageButton">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Style="{StaticResource SplitMenuIcon}" Text="&#xE8F1;"/>
-                            <TextBlock Style="{StaticResource SplitMenuText}" Text="Персонал"/>
-                        </StackPanel>
-                    </ListBoxItem>
-                    <ListBoxItem x:Name="MyChannelsPageButton">
+                    <ListBoxItem x:Name="GroupEditPageButton">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Style="{StaticResource SplitMenuIcon}" Text="&#xF0B2;"/>
-                            <TextBlock Style="{StaticResource SplitMenuText}" Text="Группы"/>
+                            <TextBlock Style="{StaticResource SplitMenuText}" Text="Персонал"/>
                         </StackPanel>
                     </ListBoxItem>
                 </ListBox>

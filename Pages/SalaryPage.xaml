@@ -67,21 +67,22 @@
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
 
             <!--Панель 1 отображает текущий список сотрудников штата-->
             <ScrollViewer Grid.Column="0"
-                          MaxWidth="470"
+                          MaxWidth="1000"
                           HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto"
                           HorizontalAlignment="Left">
                 <StackPanel VerticalAlignment="Stretch">
                     <ListView x:Name="currentStaffList"  
                           SelectionMode="Single"
-                          ItemsSource="{x:Bind persons}">
+                          ItemsSource="{x:Bind persons}"
+                          SelectedValue="Id"
+                          SelectionChanged="CurrentStaffList_SelectionChanged">
                         <ListView.ItemTemplate>
                             <DataTemplate  x:DataType="local:Person">
                                 <StackPanel Orientation="Horizontal"  Margin="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
@@ -127,11 +128,39 @@
             </ScrollViewer>-->
 
             <!--Панель 3 отображает информацию об определенном сотруднике-->
-            <ScrollViewer Grid.Column="2"
+            <ScrollViewer x:Name="certainStaffScrollViewer" 
+                          Grid.Column="1"
+                          MaxWidth="400"
                           HorizontalScrollBarVisibility="Auto"
-                          VerticalScrollBarVisibility="Auto">
-
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalAlignment="Left"
+                          Visibility="Collapsed">
+                <StackPanel VerticalAlignment="Stretch">
+                    <ListView x:Name="certainStaffList"  
+                          SelectionMode="Single"
+                          ItemsSource="{x:Bind salaries}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate  x:DataType="local:Salary">
+                                <StackPanel Orientation="Horizontal"  Margin="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                    <TextBlock Text="{x:Bind  Person.Name}" 
+                                               Width="150"
+                                           Style="{StaticResource StandartTextBlock}"/>
+                                    <TextBlock Text="{x:Bind Person.Group.Name}" 
+                                           Style="{StaticResource StandartTextBlock}"/>
+                                    <TextBlock Text="{x:Bind CurrentSalary}" 
+                                           Style="{StaticResource StandartTextBlock}"/>
+                                    <TextBlock Text="{x:Bind Month}" 
+                                           Style="{StaticResource StandartTextBlock}"/>
+                                    <TextBlock Text="{x:Bind Year}" 
+                                           Style="{StaticResource StandartTextBlock}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
             </ScrollViewer>
+
+
         </Grid>
     </Grid>
 </Page>

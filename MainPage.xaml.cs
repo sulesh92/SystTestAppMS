@@ -27,7 +27,10 @@ namespace TestAppSysTech
             SystemNavigationManager.GetForCurrentView().BackRequested += AppBackRequested;
 
             Loaded += CheckGroupsInDb; //проверяем наличие записей о группах в БД
+             
         }
+
+       
 
         /// <summary>
         /// Обработчик системного события BackRequested. 
@@ -39,23 +42,20 @@ namespace TestAppSysTech
         private void AppBackRequested(object sender, BackRequestedEventArgs e)
         {
             Frame frame = CurrentContentFrame as Frame; //переход будет осуществляться внутри фрейма CurrentContentFrame
+
             if (frame.CanGoBack) //проверка возможности возрвата назад
             {
                 frame.GoBack();//возвращает предыдущий фрейм, однако в боковом меню изменение не отображается
 
-                string[] currentFrameSplitMenuButton = CurrentContentFrame.SourcePageType.ToString().Split('.'); //получаем массив с именами страниц
+                string[] currentFrameSplitMenuButton = CurrentContentFrame.SourcePageType.ToString().Split('.'); //получаем массив с названием страницы EasyPosting.NameOfPage
                 var selectedObjectName = string.Format("{0}Button", currentFrameSplitMenuButton[1]); //добавлеяем к названию текущей страницы Button
                 var SelectedObject = MainPageListBox.FindName(selectedObjectName); //Находим объект с именем нужной кнопки в списке меню
                 var index = MainPageListBox.Items.IndexOf(SelectedObject); //определяем индекс кнопки меню
                 MainPageListBox.SelectedIndex = index;// Выбираем кнопку в меню соотвествующую названию текущей страницы
-
-                //При переходе назад  MainPageListBox создает событие SelectionChanged, которое также необходимо обработать. 
-                //frame.GoBack();    
+                frame.GoBack();
                 e.Handled = true;  //необходимо сообщить о том, что событие возврат назад было обработано 
                                    // MainPageListBox.SelectionChanged 
             }
-            
-            //Скрывает системную кнопку Назад при переходе на главную страницу
             if (CurrentContentFrame.SourcePageType == typeof(SalaryPage))
             {
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed; //кнопка назад скрыта
@@ -107,14 +107,14 @@ namespace TestAppSysTech
 
         private void MainPageListBox_Click(object sender, SelectionChangedEventArgs e)
         {
-            if (StaffSalaryPageButton.IsSelected)
+            if (SalaryPageButton.IsSelected)
             {
                 CurrentContentFrame.Navigate(typeof(SalaryPage));
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed; //кнопка назад скрыта
             }
-            if (StaffEditPageButton.IsSelected)
+            if (GroupEditPageButton.IsSelected)
             {
-                CurrentContentFrame.Navigate(typeof(EditStaffPage));
+                CurrentContentFrame.Navigate(typeof(GroupEditPage));
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible; //кнопка назад доступна
             }
         }
