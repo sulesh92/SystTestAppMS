@@ -36,11 +36,16 @@ namespace TestAppSysTech
         //вклада суммы одноги из salesman в общую корзину
         public static Dictionary<int, SalesmanMoneyBag> salaryWeightDictionary;
 
+        public void StartCalculationsForAllPersons(DateTimeOffset accountingDate)
+        {
+            CountEmployeeSalary(accountingDate);
 
+            CreateRealTree();
+        }
 
         /// <summary>
         /// Метод расчитывает зарплаты всех сотрудников группы
-        /// EMployee
+        /// Employee
         /// </summary>
         public void CountEmployeeSalary(DateTimeOffset accountingDate)
         {
@@ -59,6 +64,16 @@ namespace TestAppSysTech
             }
         }
 
-        
+        public void CreateRealTree(Person lastPerson)
+        {
+            Queue<Person> turn = new Queue<Person>(); //хранит сотрудников, которые подлежат проверке 
+            turn.Enqueue(lastPerson); //первый в очереди сотрудник для проверки
+
+            while(turn.Count() != 0)
+            {
+
+            }
+        }
+
     }
 }

@@ -139,9 +139,6 @@ namespace TestAppSysTech
             {
                 using (DataModelContext context = new DataModelContext())
                 {
-                    int o = 0;
-                    o++;
-
                     List<Subordinate> tempSubList = context.Subordinates.ToList();
                     List<Salary> salaries = context.Salaries.ToList();
                     List<Group> groups = context.Groups.ToList();
