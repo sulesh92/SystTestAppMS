@@ -60,6 +60,10 @@
                 <Button Margin="10,5,5,5" Click="CalculateButton_Click">
                     <TextBlock Text="Рассчитать" Height="20" Margin="0,-0.4,0,0" VerticalAlignment="Top"/>
                 </Button>
+
+                <Button Margin="10,5,5,5" Click="CalculateAllButton_Click">
+                    <TextBlock Text="Рассчитать всех" Height="20" Margin="0,-0.4,0,0" VerticalAlignment="Top"/>
+                </Button>
             </StackPanel>
         </StackPanel>
 

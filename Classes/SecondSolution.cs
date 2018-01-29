@@ -68,8 +68,6 @@ namespace TestAppSysTech
             }
 
             salaryWeightDictionary.Clear();
-            
-
         }
 
         public static Person CreateTree(Person targetPerson, bool[] isPersonSalaryCalculated)
@@ -139,9 +137,10 @@ namespace TestAppSysTech
             {
                 using (DataModelContext context = new DataModelContext())
                 {
+                    List<Group> groups = context.Groups.ToList();
                     List<Subordinate> tempSubList = context.Subordinates.ToList();
                     List<Salary> salaries = context.Salaries.ToList();
-                    List<Group> groups = context.Groups.ToList();
+                    
 
                     //Текущий сотрудник, для которого выполняется расчет зарплаты
                     Person p = context.Persons.Find(turn.Dequeue().Id);
@@ -196,10 +195,6 @@ namespace TestAppSysTech
                     isPersonSalaryCalculated[p.Id] = true;
                     //Переход на уровень выше. Для этого текущего сотрудника находим в таблице подчиненных, поскольку 
                     //в классе Subperson хранится ссылка на начальника. После чего начальник добавляется в список Stack, 
-
-                    /*  context.Subordinates.Find("OwnPersonId", p.Id);*/ //если у человека есть два начальника,  
-                                                                          //то тут возникнет ошибка, поэтому 
-                                                                          //сохраняем результат в список подчиненных
 
                     List<Subordinate> subs = context.Subordinates.Where(s => s.OwnPersonId == p.Id).ToList();
 
